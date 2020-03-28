@@ -25,3 +25,4 @@ def hello_world():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             # on fait les trucs
+            return redirect(request.url)

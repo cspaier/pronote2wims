@@ -1,5 +1,6 @@
 from flask import Flask, flash, redirect, request, render_template
 from werkzeug.utils import secure_filename
+from utils import randomStringDigits
 import csv
 app = Flask(__name__)
 import re
@@ -29,17 +30,23 @@ def hello_world():
             #print(file.read().decode('utf-8'))
             reader = csv.DictReader(file.read().decode('utf-8-sig').splitlines(), delimiter=";")
             wims_dict = []
+            style_mdp = request.form.get("mdp_select")
+
+
             for ligne in reader:
                 # Les noms de familles sont en MAJUSCULES
                 nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
                 # On enlève le nom de la ligne et l'espace du début
                 prenom = ligne["Élève"].replace(nom, '')[1:]
+                if style_mdp == "aleatoire":
+                    mdp = randomStringDigits(int(request.form.get("mdp_longueur")))
                 wims_dict.append({
-                    "nom": nom,
-                    "prenom": prenom
+                    "lastname": nom,
+                    "firstname": prenom,
+                    "password": mdp
                 })
                 # TODO: Ajouter le mdp à partir du champ de formulaire
                 # préviluasiation en tableau
                 # vue de téléchargement csv
-                print(wims_dict)
+            print(wims_dict)
     return redirect(request.url)

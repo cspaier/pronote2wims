@@ -17,7 +17,12 @@
         <option value="aleatoire">Aléatoire</option>
         <option value="date_naissance">Date de naissance</option>
       </select>
-      <input id="mdp" type=text name=mdp placeholder="mot de passe si fixe"><br><br>
+      <input id="mdp" type=text name=mdp placeholder="mot de passe si fixe">
+      <div id="mdp_longueur"style="display:None;">
+      <label>taille</label>
+        <input type="number"  name="mdp_longueur" min="5" max="10" value="6" >
+      </div>
+      <br><br>
       <label>Fichier élèves</label>
 
       <input type=file name=file>
@@ -34,11 +39,19 @@
 </body>
 <script>
 function changeSelectMdp() {
-  if (document.getElementById("mdp_select").value == "fixe"){
+  var mdp_select = document.getElementById("mdp_select").value
+  if (mdp_select == "fixe"){
     document.getElementById("mdp").style.display = "inline-block";
+    document.getElementById("mdp_longueur").style.display = "None";
+
+  }
+  else if (mdp_select == "aleatoire"){
+    document.getElementById("mdp").style.display = "None";
+    document.getElementById("mdp_longueur").style.display = "inline-block";
   }
   else{
     document.getElementById("mdp").style.display = "None";
+    document.getElementById("mdp_longueur").style.display = "None";
   }
 };
 </script>

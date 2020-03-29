@@ -1,15 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+      <meta charset="utf-8">
     <title>Conversion pronote vers wims</title>
 </head>
 <body>
 
     <h1>Conversion pronote vers wims</h1>
+    <div style="display:flex">
+      <div style="width:50%">
+      <h2>Données pronote</h2>
     <form method=post enctype=multipart/form-data>
+      <label>Mot de passe wims</label>
+      <input type=text name=mdp placeholder="mot de passe"><br><br>
+      <label>Fichier élèves</label>
+
       <input type=file name=file>
       <input type=submit value=Upload>
     </form>
     <p>blabla on ne stocke rien. Lien vers github</p>
+  </div>
+  <div style="width:50%">
+    <h2> Identifiants wims</h2>
+
+  </div>
+  </div>
+
 </body>
 </html>

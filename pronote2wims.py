@@ -1,9 +1,10 @@
 from flask import Flask, flash, redirect, request, render_template
 from werkzeug.utils import secure_filename
-
+import csv
 app = Flask(__name__)
+import re
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'csv'}
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -15,6 +16,7 @@ def hello_world():
     if request.method == "GET":
         return render_template('pronote2wims.html')
     if request.method == 'POST':
+
         # check if the post request has the file part
         if 'file' not in request.files:
             return redirect(request.url)
@@ -24,5 +26,20 @@ def hello_world():
         if file.filename == '':
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            # on fait les trucs
-            return redirect(request.url)
+            #print(file.read().decode('utf-8'))
+            reader = csv.DictReader(file.read().decode('utf-8-sig').splitlines(), delimiter=";")
+            wims_dict = []
+            for ligne in reader:
+                # Les noms de familles sont en MAJUSCULES
+                nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
+                # On enlève le nom de la ligne et l'espace du début
+                prenom = ligne["Élève"].replace(nom, '')[1:]
+                wims_dict.append({
+                    "nom": nom,
+                    "prenom": prenom
+                })
+                # TODO: Ajouter le mdp à partir du champ de formulaire
+                # préviluasiation en tableau
+                # vue de téléchargement csv
+                print(wims_dict)
+    return redirect(request.url)

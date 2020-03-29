@@ -17,12 +17,17 @@ Hébergé sur https://pronote2wims.herokuapp.com/
 
 Normalement on a un retour du type:
 ```
- * Serving Flask app "pronote2wims.py"
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
+ * Environment: development
  * Debug mode: on
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 172-164-488
 
 ```
 Ouvrir l'url http://127.0.0.1:5000/ pour tester.
+
+## TODO
+1. Ajouter le mdp à partir du champ de formulaire. Possible configuration pour mdp à partir de date de naissance ou aléatoire.
+2. préviluasation en tableau html
+3. vue de téléchargement du ficher csv

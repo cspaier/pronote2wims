@@ -12,27 +12,29 @@
       <h2>Données pronote</h2>
     <form method=post enctype=multipart/form-data>
       <label>Mot de passe wims</label>
-      <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()">
+      <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()" value={{form.mdp_select}}>
         <option value="fixe">Fixe</option>
         <option value="aleatoire">Aléatoire</option>
         <option value="date_naissance">Date de naissance</option>
       </select>
-      <input id="mdp" type=text name=mdp placeholder="mot de passe si fixe">
+      <input id="mdp_fixe" type=text name=mdp_fixe placeholder="mot de passe si fixe" value="{{form.mdp_fixe}}">
       <div id="mdp_longueur"style="display:None;">
       <label>taille</label>
-        <input type="number"  name="mdp_longueur" min="5" max="10" value="6" >
+        <input type="number"  name="mdp_longueur" min="5" max="10" value={{form.mdp_longueur}} >
       </div>
       <br><br>
       <label>Fichier élèves</label>
 
-      <input type=file name=file>
+      <input type=file name=file value={{file}}>
       <input type=submit value=Upload>
     </form>
     <p>blabla on ne stocke rien. Lien vers github</p>
   </div>
   <div style="width:50%">
     <h2> Identifiants wims</h2>
-
+    {% if wims_dict %}
+      {% include 'table.html'%}
+    {% endif %}
   </div>
   </div>
 
@@ -41,16 +43,16 @@
 function changeSelectMdp() {
   var mdp_select = document.getElementById("mdp_select").value
   if (mdp_select == "fixe"){
-    document.getElementById("mdp").style.display = "inline-block";
+    document.getElementById("mdp_fixe").style.display = "inline-block";
     document.getElementById("mdp_longueur").style.display = "None";
 
   }
   else if (mdp_select == "aleatoire"){
-    document.getElementById("mdp").style.display = "None";
+    document.getElementById("mdp_fixe").style.display = "None";
     document.getElementById("mdp_longueur").style.display = "inline-block";
   }
   else{
-    document.getElementById("mdp").style.display = "None";
+    document.getElementById("mdp_fixe").style.display = "None";
     document.getElementById("mdp_longueur").style.display = "None";
   }
 };

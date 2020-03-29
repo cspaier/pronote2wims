@@ -15,7 +15,13 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
     if request.method == "GET":
-        return render_template('pronote2wims.html')
+        form = {
+            "mdp_select": "fixe",
+            "mdp_fixe": "",
+            "mdp_longueur": 6,
+            "file": None
+        }
+        return render_template('pronote2wims.html', form=form)
     if request.method == 'POST':
 
         # check if the post request has the file part
@@ -32,7 +38,6 @@ def hello_world():
             wims_dict = []
             style_mdp = request.form.get("mdp_select")
 
-
             for ligne in reader:
                 # Les noms de familles sont en MAJUSCULES
                 nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
@@ -40,13 +45,15 @@ def hello_world():
                 prenom = ligne["Élève"].replace(nom, '')[1:]
                 if style_mdp == "aleatoire":
                     mdp = randomStringDigits(int(request.form.get("mdp_longueur")))
+                elif style_mdp == "fixe":
+                    mdp = request.form.get("mdp_fixe")
+                else:
+                    mdp = ligne['Né(e) le'].replace('/','')
                 wims_dict.append({
                     "lastname": nom,
                     "firstname": prenom,
                     "password": mdp
                 })
-                # TODO: Ajouter le mdp à partir du champ de formulaire
-                # préviluasiation en tableau
                 # vue de téléchargement csv
-            print(wims_dict)
-    return redirect(request.url)
+
+            return render_template('pronote2wims.html', form=request.form, file=request.files, wims_dict=wims_dict)

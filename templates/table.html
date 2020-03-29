@@ -1,0 +1,15 @@
+<table>
+  <tr>
+    <th>Lastname</th>
+    <th>Firstname</th>
+    <th>Password</th>
+  </tr>
+{% for eleve in wims_dict %}
+  <tr>
+    <td>{{eleve.lastname}}</td>
+    <td>{{eleve.firstname}}</td>
+    <td>{{eleve.password}}</td>
+  </tr>
+{% endfor %}
+    <td></td>
+  </table>

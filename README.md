@@ -10,6 +10,7 @@ Hébergé sur https://pronote2wims.herokuapp.com/
 2. l'activer: `source venv/bin/activate`
 3. cloner le dépot git: `git clone https://github.com/cspaier/pronote2wims.git`
 4. se placer dans le dossier du dépot: `cd pronote2wims`
+5. installer les dépendances:`pip install -r requirements.txt`
 5. indiquer le nom de l'app flask: `export FLASK_APP=pronote2wims.py`
 6. activer le mode débug de flask: `export FLASK_ENV=development`
 7. lancer le serveur local: `python -m flask run`

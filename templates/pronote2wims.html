@@ -44,6 +44,7 @@
 
         <input type=submit value=Prévisualisation>
 
+
       <input type=hidden name=wims_json value='{{wims_json}}'>
     </form>
     <p>Aucune donnée n'est stoquée ou analisée. Le code de cet outil est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a></p>
@@ -51,6 +52,10 @@
   <div style="width:50%">
     <h2> Identifiants wims</h2>
     {% if wims_list %}
+      <form method=post enctype=multipart/form-data action="/telecharger/">
+        <input type=hidden name=wims_json value='{{wims_json}}'>
+        <input type=submit value=Télécharger le csv>
+      </form>
       {% include 'table.html'%}
     {% endif %}
   </div>

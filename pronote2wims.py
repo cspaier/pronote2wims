@@ -1,10 +1,12 @@
-from flask import Flask, flash, redirect, request, render_template
-from werkzeug.utils import secure_filename
+from flask import Flask, flash, redirect, request, render_template, send_file, make_response
 from utils import randomStringDigits
 import csv
 import json
-app = Flask(__name__)
 import re
+
+from io import StringIO
+app = Flask(__name__)
+
 
 ALLOWED_EXTENSIONS = {'csv'}
 
@@ -45,16 +47,29 @@ def csv2list(csv_list, form):
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne["Élève"].replace(nom, '')[1:]
         mdp = mdp_factory(ligne, form)
-        id = id_factory(nom, prenom, form)
+        login = id_factory(nom, prenom, form)
         wims_list.append({
             "lastname": nom,
             "firstname": prenom,
             "password": mdp,
             "birthday": ligne['birthday'],
-            "id": id
+            "login": login
         })
     return wims_list
 
+@app.route('/telecharger/', methods=['POST'])
+def telecharger():
+    wims_list = json.loads(request.form.get("wims_json", None))
+    si = StringIO()
+    fieldnames = ['login', 'firstname', 'lastname', 'password']
+    writer = csv.DictWriter(si, fieldnames=fieldnames)
+    writer.writeheader()
+    for ligne in wims_list:
+        writer.writerow({key: ligne[key] for key in fieldnames })
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=wims.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -83,7 +98,7 @@ def hello_world():
             wims_list = json.loads(request.form.get("wims_json", None))
             for ligne in wims_list:
                 ligne['password'] = mdp_factory(ligne, request.form)
-                ligne['id'] = id_factory(ligne['lastname'], ligne['firstname'], request.form)
+                ligne['login'] = id_factory(ligne['lastname'], ligne['firstname'], request.form)
 
             # vue de téléchargement csv
 

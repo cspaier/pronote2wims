@@ -1,8 +1,8 @@
 from os import listdir
 from os.path import splitext
 
-nomfichier = "tousAziza.csv"
-numeroGroupementWims="2772584"
+nomfichier = "tousAziza.csv" #c'est le nom du fichier de sortie. Il faudra le demander et le passer dans le POST
+numeroGroupementWims="2772584" #c'est le numéro de la classe wims. Idem
 
 
 #Comment utiliser ce fichier :

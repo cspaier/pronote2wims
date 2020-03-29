@@ -1,18 +1,20 @@
-from flask import Flask, flash, redirect, request, render_template, send_file, make_response
-from utils import randomStringDigits
 import csv
 import json
 import re
-
 from io import StringIO
+from flask import Flask, redirect, request, render_template, make_response
+from utils import randomStringDigits
+
 app = Flask(__name__)
 
 
 ALLOWED_EXTENSIONS = {'csv'}
 
 def allowed_file(filename):
+    """Teste si le fichier a la bonne extension"""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def id_factory(nom, prenom, form):
     """ Construit un identifiant pour une ligne élève.
@@ -22,11 +24,11 @@ def id_factory(nom, prenom, form):
         return prenom.replace(' ', '').lower() + nom.replace(' ', '').lower()
     if style_id == 'pnom':
         return prenom[0].lower() + nom.replace(' ', '').lower()
+    # Sinon, le format est "custom"
     return form['format_id_custom']\
         .replace('$nom', nom.replace(' ', '').lower())\
         .replace('$prenom', prenom.replace(' ', '').lower())\
         .replace('$p', prenom[0].lower())
-
 
 
 def mdp_factory(ligne, form):
@@ -37,9 +39,12 @@ def mdp_factory(ligne, form):
         return randomStringDigits(int(form.get("mdp_longueur")))
     if style_mdp == "fixe":
         return form.get("mdp_fixe")
-    return ligne['birthday'].replace('/','')
+    # Sinon, le style est "date de naissance"
+    return ligne['birthday'].replace('/', '')
+
 
 def csv2list(csv_list, form):
+    """Transforme les données csv de pronote en liste de dictionnaire au format wims."""
     wims_list = []
     for ligne in csv_list:
         # Les noms de familles sont en MAJUSCULES
@@ -59,13 +64,17 @@ def csv2list(csv_list, form):
 
 @app.route('/telecharger/', methods=['POST'])
 def telecharger():
+    """Télécharge un fichier csv construit à partir des données json"""
+    # On récupère les données JSON que l'on convertit en object python
     wims_list = json.loads(request.form.get("wims_json", None))
-    si = StringIO()
+    # Pour wims, on n'utilisera que les champs suivants. On omet le champ "birthday"
     fieldnames = ['login', 'firstname', 'lastname', 'password']
+    si = StringIO()
     writer = csv.DictWriter(si, fieldnames=fieldnames)
     writer.writeheader()
+    # On écrit les lignes dans le csv
     for ligne in wims_list:
-        writer.writerow({key: ligne[key] for key in fieldnames })
+        writer.writerow({key: ligne[key] for key in fieldnames})
     output = make_response(si.getvalue())
     output.headers["Content-Disposition"] = "attachment; filename=wims.csv"
     output.headers["Content-type"] = "text/csv"
@@ -73,8 +82,27 @@ def telecharger():
 
 
 @app.route('/', methods=['GET', 'POST'])
-def hello_world():
+def home():
+    """
+    La vue principale de notre application.
+    Au départ, par GET, on a le formulaire vide qui permet d'envoyer un fichier csv.
+    Quand un fichier est envoyé, on le convertit en une liste de dictionnaires:
+        [{"firstname": prenom,
+          "lastname": nom,
+          "login": identifiant,
+          "birthday": date_de_naissance,
+          "password": mot_de_passe},
+          ...
+         ]
+    On conserve le champ "birthday" car il peut être utile pour la création du mot de passe.
+    On stocke cette liste dans un (oups deux) champs de formulaires cachés en JSON.
+    L'utilisateur peut renvoyer le formulaire en POST sans renvoyer de fichier csv si il souhaite,
+    par exemple, changer les formats des identifiants et mots de passe.
+    On utilise alors les données JSON mentionnées ci-dessus qui sont transmises par POST.
+    """
+    # Au départ on arrive avec GET
     if request.method == "GET":
+        # On initialise le formulaire
         form = {
             "mdp_select": "fixe",
             "mdp_fixe": "",
@@ -82,13 +110,15 @@ def hello_world():
             "file": None
         }
         return render_template('pronote2wims.html', form=form)
+
     if request.method == 'POST':
+        # L'utilisateur à envoyer le formulaire
         # On test si un fichier est présent
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             if not(file and allowed_file(file.filename)):
                 return redirect(request.url)
-            # on commence par remplacer les noms des champs par le format wims
+            # on remplace 'Né(e) le' par 'birthday' pour pouvoir utiliser directement mdp_factory
             csv_texte = file.read().decode('utf-8-sig').replace('Né(e) le', 'birthday').splitlines()
             reader = csv.DictReader(csv_texte, delimiter=";")
             wims_list = csv2list(reader, request.form)
@@ -96,10 +126,13 @@ def hello_world():
         else:
             # pas de fichier, on travail à partir des données json stoquées dans un champ caché. Pas beau mais ca marche.
             wims_list = json.loads(request.form.get("wims_json", None))
+            # Il faut actualiser les champs 'password' et 'login'
             for ligne in wims_list:
                 ligne['password'] = mdp_factory(ligne, request.form)
                 ligne['login'] = id_factory(ligne['lastname'], ligne['firstname'], request.form)
-
-            # vue de téléchargement csv
-
-        return render_template('pronote2wims.html', form=request.form, wims_list=wims_list, wims_json=json.dumps(wims_list))
+        return render_template(
+            'pronote2wims.html',
+            form=request.form,
+            wims_list=wims_list,
+            wims_json=json.dumps(wims_list)
+        )

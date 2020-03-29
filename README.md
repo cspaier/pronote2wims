@@ -28,6 +28,5 @@ Normalement on a un retour du type:
 Ouvrir l'url http://127.0.0.1:5000/ pour tester.
 
 ## TODO
-1. Ajouter le mdp à partir du champ de formulaire. Possible configuration pour mdp à partir de date de naissance ou aléatoire.
-2. préviluasation en tableau html
-3. vue de téléchargement du ficher csv
+1. configuration de l'identifiant wims
+2. vue de téléchargement du ficher csv

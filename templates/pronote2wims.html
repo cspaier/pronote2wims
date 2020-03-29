@@ -16,18 +16,32 @@
         <input type=file name=file value={{file}}>
         <input type=submit value=Upload>
       <h2>Configuration wims</h2>
-      <label>Mot de passe wims</label>
+      <label>Mot de passe</label>
       <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()">
         <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe</option>
         <option value="aleatoire" {% if form.mdp_select=="aleatoire" %}selected="selected" {% endif %}>Aléatoire</option>
         <option value="date_naissance"{% if form.mdp_select=="date_naissance" %}selected="selected" {% endif %}>Date de naissance</option>
       </select>
-      <input id="mdp_fixe" type=text name=mdp_fixe placeholder="mot de passe si fixe" value="{{form.mdp_fixe}}">
+      <input id="mdp_fixe" type=text name=mdp_fixe placeholder="mot de passe fixe" value="{{form.mdp_fixe}}">
       <div id="mdp_longueur"style="display:None;">
       <label>taille</label>
         <input type="number"  name="mdp_longueur" min="5" max="10" value={{form.mdp_longueur}} >
       </div>
       <br><br>
+      <label>Format de l'identifiant</label>
+        <select id="id_select" name=id_select onchange="changeSelectId()">
+          <option value="prenomnom" {% if form.id_select=="prenomnom" %}selected="selected" {% endif %}>prénom.nom</option>
+          <option value="pnom" {% if form.id_select=="pnom" %}selected="selected" {% endif %}>p.nom</option>
+          <option value="custom"{% if form.id_select=="custom" %}selected="selected" {% endif %}>personalisé</option>
+        </select>
+        <p id="exemple_prenomnom">Exemple: georgesbrassens</p>
+        <p id="exemple_pnom">Exemple: gbrassens</p>
+        <div id="format_id_custom">
+          <input  type=text name=format_id_custom placeholder="format de l'Identifiant wims" value="{{form.format_id_custom}}">
+          <p>Utiliser <b>$nom</b> pour le nom complet, <b>$prenom</b> pour le prénom complet, <b>$p</b> pour la première lettre du prénom</p>
+        </div>
+      <br><br>
+
         <input type=submit value=Prévisualisation>
 
       <input type=hidden name=wims_json value='{{wims_json}}'>
@@ -45,7 +59,7 @@
 </body>
 <script>
 changeSelectMdp()
-
+changeSelectId()
 function changeSelectMdp() {
   var mdp_select = document.getElementById("mdp_select").value
   if (mdp_select == "fixe"){
@@ -60,6 +74,25 @@ function changeSelectMdp() {
   else{
     document.getElementById("mdp_fixe").style.display = "None";
     document.getElementById("mdp_longueur").style.display = "None";
+  }
+};
+function changeSelectId() {
+  var id_select = document.getElementById("id_select").value
+  if (id_select == "custom"){
+    document.getElementById("format_id_custom").style.display = "inline-block";
+    document.getElementById("exemple_prenomnom").style.display = "None";
+    document.getElementById("exemple_pnom").style.display = "None";
+
+  }
+  else if (id_select == "prenomnom"){
+    document.getElementById("format_id_custom").style.display = "None";
+    document.getElementById("exemple_prenomnom").style.display = "inline-block";
+    document.getElementById("exemple_pnom").style.display = "None";
+  }
+  else{
+    document.getElementById("format_id_custom").style.display = "None";
+    document.getElementById("exemple_prenomnom").style.display = "None";
+    document.getElementById("exemple_pnom").style.display = "inline-block";
   }
 };
 </script>

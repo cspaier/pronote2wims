@@ -12,7 +12,24 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def id_factory(nom, prenom, form):
+    """ Construit un identifiant pour une ligne élève.
+    """
+    style_id = form['id_select']
+    if style_id == 'prenomnom':
+        return prenom.replace(' ', '').lower() + nom.replace(' ', '').lower()
+    if style_id == 'pnom':
+        return prenom[0].lower() + nom.replace(' ', '').lower()
+    return form['format_id_custom']\
+        .replace('$nom', nom.replace(' ', '').lower())\
+        .replace('$prenom', prenom.replace(' ', '').lower())\
+        .replace('$p', prenom[0].lower())
+
+
+
 def mdp_factory(ligne, form):
+    """ Construit un mot de passe pour une ligne élève.
+    """
     style_mdp = form['mdp_select']
     if style_mdp == "aleatoire":
         return randomStringDigits(int(form.get("mdp_longueur")))
@@ -20,19 +37,21 @@ def mdp_factory(ligne, form):
         return form.get("mdp_fixe")
     return ligne['birthday'].replace('/','')
 
-def csv2dict(csv_dict, form):
+def csv2list(csv_list, form):
     wims_list = []
-    for ligne in csv_dict:
+    for ligne in csv_list:
         # Les noms de familles sont en MAJUSCULES
         nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne["Élève"].replace(nom, '')[1:]
         mdp = mdp_factory(ligne, form)
+        id = id_factory(nom, prenom, form)
         wims_list.append({
             "lastname": nom,
             "firstname": prenom,
             "password": mdp,
-            "birthday": ligne['birthday']
+            "birthday": ligne['birthday'],
+            "id": id
         })
     return wims_list
 
@@ -50,21 +69,21 @@ def hello_world():
         return render_template('pronote2wims.html', form=form)
     if request.method == 'POST':
         # On test si un fichier est présent
-        # if user does not select file, browser also
-        # submit an empty part without filename
-
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             if not(file and allowed_file(file.filename)):
                 return redirect(request.url)
-            reader = csv.DictReader(file.read().decode('utf-8-sig').replace('Né(e) le', 'birthday').splitlines(), delimiter=";")
-            wims_list = csv2dict(reader, request.form)
+            # on commence par remplacer les noms des champs par le format wims
+            csv_texte = file.read().decode('utf-8-sig').replace('Né(e) le', 'birthday').splitlines()
+            reader = csv.DictReader(csv_texte, delimiter=";")
+            wims_list = csv2list(reader, request.form)
+
         else:
-            # pas de fichier, on travail à partir des données json
+            # pas de fichier, on travail à partir des données json stoquées dans un champ caché. Pas beau mais ca marche.
             wims_list = json.loads(request.form.get("wims_json", None))
-            for line in wims_list:
-                line['password'] = mdp_factory(line, request.form)
-                print(line)
+            for ligne in wims_list:
+                ligne['password'] = mdp_factory(ligne, request.form)
+                ligne['id'] = id_factory(ligne['lastname'], ligne['firstname'], request.form)
 
             # vue de téléchargement csv
 

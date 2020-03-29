@@ -1,11 +1,13 @@
 <table>
   <tr>
+    <th>Identifiant</th>
     <th>Lastname</th>
     <th>Firstname</th>
     <th>Password</th>
   </tr>
 {% for eleve in wims_list %}
   <tr>
+    <td>{{eleve.id}}</td>
     <td>{{eleve.lastname}}</td>
     <td>{{eleve.firstname}}</td>
     <td>{{eleve.password}}</td>

@@ -56,4 +56,4 @@ def hello_world():
                 })
                 # vue de téléchargement csv
 
-            return render_template('pronote2wims.html', form=request.form, file=request.files, wims_dict=wims_dict)
+            return render_template('pronote2wims.html', form=request.form, wims_dict=wims_dict)

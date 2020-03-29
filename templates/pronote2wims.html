@@ -9,8 +9,13 @@
     <h1>Conversion pronote vers wims</h1>
     <div style="display:flex">
       <div style="width:50%">
-      <h2>Données pronote</h2>
+
     <form method=post enctype=multipart/form-data>
+      <h2>Données pronote</h2>
+      <label>Fichier csv</label>
+        <input type=file name=file value={{file}}>
+        <input type=submit value=Upload>
+      <h2>Configuration wims</h2>
       <label>Mot de passe wims</label>
       <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()">
         <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe</option>
@@ -23,16 +28,15 @@
         <input type="number"  name="mdp_longueur" min="5" max="10" value={{form.mdp_longueur}} >
       </div>
       <br><br>
-      <label>Fichier élèves</label>
+        <input type=submit value=Prévisualisation>
 
-      <input type=file name=file value={{file}}>
-      <input type=submit value=Upload>
+      <input type=hidden name=wims_json value='{{wims_json}}'>
     </form>
     <p>blabla on ne stocke rien. Lien vers github</p>
   </div>
   <div style="width:50%">
     <h2> Identifiants wims</h2>
-    {% if wims_dict %}
+    {% if wims_list %}
       {% include 'table.html'%}
     {% endif %}
   </div>

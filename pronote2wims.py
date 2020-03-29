@@ -2,6 +2,7 @@ from flask import Flask, flash, redirect, request, render_template
 from werkzeug.utils import secure_filename
 from utils import randomStringDigits
 import csv
+import json
 app = Flask(__name__)
 import re
 
@@ -10,6 +11,31 @@ ALLOWED_EXTENSIONS = {'csv'}
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def mdp_factory(ligne, form):
+    style_mdp = form['mdp_select']
+    if style_mdp == "aleatoire":
+        return randomStringDigits(int(form.get("mdp_longueur")))
+    if style_mdp == "fixe":
+        return form.get("mdp_fixe")
+    return ligne['birthday'].replace('/','')
+
+def csv2dict(csv_dict, form):
+    wims_list = []
+    for ligne in csv_dict:
+        # Les noms de familles sont en MAJUSCULES
+        nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
+        # On enlève le nom de la ligne et l'espace du début
+        prenom = ligne["Élève"].replace(nom, '')[1:]
+        mdp = mdp_factory(ligne, form)
+        wims_list.append({
+            "lastname": nom,
+            "firstname": prenom,
+            "password": mdp,
+            "birthday": ligne['birthday']
+        })
+    return wims_list
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -23,37 +49,23 @@ def hello_world():
         }
         return render_template('pronote2wims.html', form=form)
     if request.method == 'POST':
-
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            return redirect(request.url)
-        file = request.files['file']
+        # On test si un fichier est présent
         # if user does not select file, browser also
         # submit an empty part without filename
-        if file.filename == '':
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            #print(file.read().decode('utf-8'))
-            reader = csv.DictReader(file.read().decode('utf-8-sig').splitlines(), delimiter=";")
-            wims_dict = []
-            style_mdp = request.form.get("mdp_select")
 
-            for ligne in reader:
-                # Les noms de familles sont en MAJUSCULES
-                nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
-                # On enlève le nom de la ligne et l'espace du début
-                prenom = ligne["Élève"].replace(nom, '')[1:]
-                if style_mdp == "aleatoire":
-                    mdp = randomStringDigits(int(request.form.get("mdp_longueur")))
-                elif style_mdp == "fixe":
-                    mdp = request.form.get("mdp_fixe")
-                else:
-                    mdp = ligne['Né(e) le'].replace('/','')
-                wims_dict.append({
-                    "lastname": nom,
-                    "firstname": prenom,
-                    "password": mdp
-                })
-                # vue de téléchargement csv
+        if 'file' in request.files and request.files['file'].filename != '':
+            file = request.files['file']
+            if not(file and allowed_file(file.filename)):
+                return redirect(request.url)
+            reader = csv.DictReader(file.read().decode('utf-8-sig').replace('Né(e) le', 'birthday').splitlines(), delimiter=";")
+            wims_list = csv2dict(reader, request.form)
+        else:
+            # pas de fichier, on travail à partir des données json
+            wims_list = json.loads(request.form.get("wims_json", None))
+            for line in wims_list:
+                line['password'] = mdp_factory(line, request.form)
+                print(line)
 
-            return render_template('pronote2wims.html', form=request.form, wims_dict=wims_dict)
+            # vue de téléchargement csv
+
+        return render_template('pronote2wims.html', form=request.form, wims_list=wims_list, wims_json=json.dumps(wims_list))

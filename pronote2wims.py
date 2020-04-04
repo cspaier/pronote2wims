@@ -112,7 +112,7 @@ def home():
         return render_template('pronote2wims.html', form=form)
 
     if request.method == 'POST':
-        # L'utilisateur à envoyer le formulaire
+        # L'utilisateur a envoyé le formulaire
         # On test si un fichier est présent
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
@@ -124,7 +124,7 @@ def home():
             wims_list = csv2list(reader, request.form)
 
         else:
-            # pas de fichier, on travail à partir des données json stoquées dans un champ caché. Pas beau mais ca marche.
+            # pas de fichier, on travaille à partir des données json stoquées dans un champ caché. Pas beau mais ça marche.
             wims_list = json.loads(request.form.get("wims_json", None))
             # Il faut actualiser les champs 'password' et 'login'
             for ligne in wims_list:

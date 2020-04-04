@@ -120,7 +120,7 @@ def home():
                 return redirect(request.url)
             # on remplace 'Né(e) le' par 'birthday' pour pouvoir utiliser directement mdp_factory
             csv_texte = file.read().decode('utf-8-sig').replace('Né(e) le', 'birthday').splitlines()
-            reader = csv.DictReader(csv_texte, fieldnames=['Élève'], delimiter=";")
+            reader = csv.DictReader(csv_texte, fieldnames=['Élève','birthday'], delimiter=";")
             wims_list = csv2list(reader, request.form)
 
         else:

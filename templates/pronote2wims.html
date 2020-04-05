@@ -30,8 +30,9 @@
       <br><br>
       <label>Format de l'identifiant</label>
         <select id="id_select" name=id_select onchange="changeSelectId()">
-          <option value="prenomnom" {% if form.id_select=="prenomnom" %}selected="selected" {% endif %}>prénom.nom</option>
-          <option value="pnom" {% if form.id_select=="pnom" %}selected="selected" {% endif %}>p.nom</option>
+          <option value="nomp" {% if form.id_select=="nomp" %}selected="selected" {% endif %}>nom+p</option>
+          <option value="prenomnom" {% if form.id_select=="prenomnom" %}selected="selected" {% endif %}>prénom+nom</option>
+          <option value="pnom" {% if form.id_select=="pnom" %}selected="selected" {% endif %}>p+nom</option>
           <option value="custom"{% if form.id_select=="custom" %}selected="selected" {% endif %}>personalisé</option>
         </select>
         <p id="exemple_prenomnom">Exemple: georgesbrassens</p>

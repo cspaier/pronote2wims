@@ -50,7 +50,7 @@ def mdp_factory(ligne, form):
         mdp = randomStringDigits(int(form.get("mdp_longueur")))
     elif style_mdp == "fixe":
         mdpget = form.get("mdp_fixe")
-        if mdpget = '':
+        if mdpget == '':
             mdpget = 'bonjour'
         mdp = mdpget
     else :

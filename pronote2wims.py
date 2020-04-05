@@ -36,10 +36,6 @@ def id_factory(nom, prenom, form):
             .replace('$prenom', prenom2.replace(' ', '').lower())\
             .replace('$p', prenom2[0].lower())
     #tests sur la longueur de l'id
-    if len(id) < 4:
-        id = id+'IDENTIFIANT_TROP_COURT_(4_caract_min)'
-    elif len(id) > 16:
-        id = id+'IDENTIFIANT_TROP_LONG_(16_caract_max)'
     return id
 
 def mdp_factory(ligne, form):

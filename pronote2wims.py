@@ -24,29 +24,44 @@ def id_factory(nom, prenom, form):
     prenom2=re.sub('[\W_ ]+', '',prenom)
     nom2=re.sub('[\W_ ]+', '',nom)
     if style_id == 'nomp':
-        return nom2.replace(' ', '').lower() + prenom2[0].lower()
+        id = nom2.replace(' ', '').lower() + prenom2[0].lower()
     if style_id == 'prenomnom':
-        return prenom2.replace(' ', '').lower() + nom2.replace(' ', '').lower()
+        id = prenom2.replace(' ', '').lower() + nom2.replace(' ', '').lower()
     if style_id == 'pnom':
-        return prenom2[0].lower() + nom2.replace(' ', '').lower()
+        id = prenom2[0].lower() + nom2.replace(' ', '').lower()
+    else:
     # Sinon, le format est "custom"
-    return form['format_id_custom']\
-        .replace('$nom', nom2.replace(' ', '').lower())\
-        .replace('$prenom', prenom2.replace(' ', '').lower())\
-        .replace('$p', prenom2[0].lower())
-
+        id = form['format_id_custom']\
+            .replace('$nom', nom2.replace(' ', '').lower())\
+            .replace('$prenom', prenom2.replace(' ', '').lower())\
+            .replace('$p', prenom2[0].lower())
+    #tests sur la longueur de l'id
+    if len(id) < 4:
+        id = id+'IDENTIFIANT_TROP_COURT_(4_caract_min)'
+        return id
+    if len(id) > 16:
+        id = id+'IDENTIFIANT_TROP_LONG_(16_caract_max)'
+        return id
+    return id
 
 def mdp_factory(ligne, form):
     """ Construit un mot de passe pour une ligne élève.
     """
     style_mdp = form['mdp_select']
     if style_mdp == "aleatoire":
-        return randomStringDigits(int(form.get("mdp_longueur")))
+        mdp = randomStringDigits(int(form.get("mdp_longueur")))
     if style_mdp == "fixe":
-        return form.get("mdp_fixe")
+        mdp = form.get("mdp_fixe")
     # Sinon, le style est "date de naissance"
-    return ligne['birthday'].replace('/', '')
-
+    mdp = ligne['birthday'].replace('/', '')
+    #tests sur la longueur de mdp
+    if len(mdp) < 4:
+        mdp = mdp+'PASSWORD_TROP_COURT_(4_caract_min)'
+        return mdp
+    if len(mdp) > 16:
+        mdp = mdp+'PASSWORD_TROP_LONG_(16_caract_max)'
+        return mdp
+    return mdp
 
 def csv2list(csv_list, form):
     """Transforme les données csv de pronote en liste de dictionnaire au format wims."""

@@ -48,6 +48,11 @@ def mdp_factory(ligne, form):
     style_mdp = form['mdp_select']
     if style_mdp == "aleatoire":
         mdp = randomStringDigits(int(form.get("mdp_longueur")))
+    elif style_mdp == "prenom":
+        nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
+        # On enlève le nom de la ligne et l'espace du début
+        prenom = ligne["Élève"].replace(nom, '')[1:]
+        mdp = prenom
     elif style_mdp == "fixe":
         mdpget = form.get("mdp_fixe")
         if mdpget == '':

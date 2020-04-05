@@ -19,6 +19,7 @@
       <label>Mot de passe</label>
       <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()">
         <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe (le même pour tous les participants)</option>
+        <option value="prenom" {% if form.mdp_select=="prenom" %}selected="selected" {% endif %}>Prénom</option>
         <option value="aleatoire" {% if form.mdp_select=="aleatoire" %}selected="selected" {% endif %}>Aléatoire</option>
         <option value="date_naissance"{% if form.mdp_select=="date_naissance" %}selected="selected" {% endif %}>Date de naissance</option>
       </select>

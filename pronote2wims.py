@@ -20,15 +20,18 @@ def id_factory(nom, prenom, form):
     """ Construit un identifiant pour une ligne élève.
     """
     style_id = form['id_select']
+    #il faut enlever les tirets, les apostrophes, etc...
+    prenom2=re.sub('[\W_ ]+', '',prenom)
+    nom2=re.sub('[\W_ ]+', '',nom)
     if style_id == 'prenomnom':
-        return prenom.replace(' ', '').lower() + nom.replace(' ', '').lower()
+        return prenom2.replace(' ', '').lower() + nom2.replace(' ', '').lower()
     if style_id == 'pnom':
-        return prenom[0].lower() + nom.replace(' ', '').lower()
+        return prenom2[0].lower() + nom2.replace(' ', '').lower()
     # Sinon, le format est "custom"
     return form['format_id_custom']\
-        .replace('$nom', nom.replace(' ', '').lower())\
-        .replace('$prenom', prenom.replace(' ', '').lower())\
-        .replace('$p', prenom[0].lower())
+        .replace('$nom', nom2.replace(' ', '').lower())\
+        .replace('$prenom', prenom2.replace(' ', '').lower())\
+        .replace('$p', prenom2[0].lower())
 
 
 def mdp_factory(ligne, form):
@@ -47,9 +50,6 @@ def csv2list(csv_list, form):
     """Transforme les données csv de pronote en liste de dictionnaire au format wims."""
     wims_list = []
     for ligne in csv_list:
-        #il faut enlever les tirets, les apostrophes...
-        ligne=ligne.replacee('-','')
-        ligne=ligne.replacee("'",'')
         # Les noms de familles sont en MAJUSCULES
         nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
         # On enlève le nom de la ligne et l'espace du début

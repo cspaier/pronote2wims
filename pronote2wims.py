@@ -53,13 +53,15 @@ def csv2list(csv_list, form):
         prenom = ligne["Élève"].replace(nom, '')[1:]
         mdp = mdp_factory(ligne, form)
         login = id_factory(nom, prenom, form)
-        wims_list.append({
-            "lastname": nom,
-            "firstname": prenom,
-            "password": mdp,
-            "birthday": ligne['birthday'],
-            "login": login
-        })
+        #les entetes ou pieds de listes dont des lignes où le prénom est vide : il faut les enlever
+        if prenom != '' :
+            wims_list.append({
+                "lastname": nom,
+                "firstname": prenom,
+                "password": mdp,
+                "birthday": ligne['birthday'],
+                "login": login
+            })
     return wims_list
 
 @app.route('/telecharger/', methods=['POST'])

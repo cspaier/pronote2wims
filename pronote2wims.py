@@ -52,6 +52,10 @@ def mdp_factory(ligne, form):
         nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne["Élève"].replace(nom, '')[1:]
+        #on enlève le non alphanumérique
+        prenom = re.sub('[\W_ ]+', '',prenom)
+        #on met en minuscules
+        prenom = prenom.lower()
         mdp = prenom
     elif style_mdp == "fixe":
         mdpget = form.get("mdp_fixe")

@@ -53,8 +53,8 @@ def csv2list(csv_list, form):
         prenom = ligne["Élève"].replace(nom, '')[1:]
         mdp = mdp_factory(ligne, form)
         login = id_factory(nom, prenom, form)
-        #les entetes ou pieds de listes dont des lignes où le prénom est vide : il faut les enlever
-        if prenom != '' :
+        #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
+        if nom != '' :
             wims_list.append({
                 "lastname": nom,
                 "firstname": prenom,

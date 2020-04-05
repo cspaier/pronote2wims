@@ -47,6 +47,9 @@ def csv2list(csv_list, form):
     """Transforme les données csv de pronote en liste de dictionnaire au format wims."""
     wims_list = []
     for ligne in csv_list:
+        #il faut enlever les tirets, les apostrophes...
+        ligne=ligne.replacee('-','')
+        ligne=ligne.replacee("'",'')
         # Les noms de familles sont en MAJUSCULES
         nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
         # On enlève le nom de la ligne et l'espace du début

@@ -23,6 +23,8 @@ def id_factory(nom, prenom, form):
     #il faut enlever les tirets, les apostrophes, etc...
     prenom2=re.sub('[\W_ ]+', '',prenom)
     nom2=re.sub('[\W_ ]+', '',nom)
+    if style_id == 'nomp':
+        return nom2.replace(' ', '').lower() + prenom2[0].lower()
     if style_id == 'prenomnom':
         return prenom2.replace(' ', '').lower() + nom2.replace(' ', '').lower()
     if style_id == 'pnom':

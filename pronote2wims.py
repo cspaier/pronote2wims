@@ -41,6 +41,7 @@ def id_factory(nom, prenom, form):
 def mdp_factory(ligne, form):
     """ Construit un mot de passe pour une ligne élève.
     """
+    mdp = ''
     style_mdp = form['mdp_select']
     if style_mdp == "aleatoire":
         mdp = randomStringDigits(int(form.get("mdp_longueur")))

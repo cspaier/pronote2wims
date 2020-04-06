@@ -15,6 +15,17 @@
 
       <div class="columns">
         <div class="column">
+          <h2 class="subtitle">A propos</h2>
+          <p>
+            Cet outil aide à convertir les données venant d'une base de donnée pronote afin de créer des classes wims.
+            C'est en quelque sorte un convertisseur de fichier csv de pronote vers wims.
+
+            <p>
+              Aucune donnée n'est stoquée ou transmise et le code est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a>
+              sous licence <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL-3</a>.
+            </p>
+          </p>
+          <hr class="hr">
 
           <form method=post enctype=multipart/form-data>
             <h2 class="subtitle">Données pronote</h2>
@@ -146,10 +157,6 @@
             {% endif %}
             <input type=hidden name=wims_json value='{{wims_json}}'>
           </form>
-          <hr class="hr">
-
-          <p>Aucune donnée n'est stoquée ou transmise.</p>
-          <p> Le code de cet outil est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a></p>
         </div>
 
         <div class="column">

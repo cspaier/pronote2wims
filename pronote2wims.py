@@ -68,9 +68,9 @@ def mdp_factory(ligne, form):
     elif style_mdp == "fixe":
         mdpget = form.get("mdp_fixe")
         if mdpget == '':
-            mdpget = 'bonjour'
+            mdpget = 'bonjour'# Je suis pas certain que ce soit bien de faire ca.
         mdp = mdpget
-    else :
+    else:
         # Sinon, le style est "date de naissance"
         mdp = ligne['birthday'].replace('/', '')
     #tests sur la longueur de mdp
@@ -159,7 +159,7 @@ def home():
                 return redirect(request.url)
             # on remplace 'Né(e) le' par 'birthday' pour pouvoir utiliser directement mdp_factory
             csv_texte = file.read().decode('utf-8-sig').replace('Né(e) le', 'birthday').splitlines()
-            reader = csv.DictReader(csv_texte, fieldnames=['Élève','birthday'], delimiter=";")
+            reader = csv.DictReader(csv_texte, delimiter=";")
             wims_list = csv2list(reader, request.form)
 
         else:

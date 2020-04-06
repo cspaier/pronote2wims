@@ -1,6 +1,7 @@
 import csv
 import json
 import re
+import unidecode
 from io import StringIO
 from flask import Flask, redirect, request, render_template, make_response
 from utils import randomStringDigits
@@ -15,45 +16,34 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def desaccent(mot):
-        """ supprime les accents du texte source """
-        accents = { 'a': ['à', 'ã', 'á', 'â'],
-                    'e': ['é', 'è', 'ê', 'ë'],
-                    'i': ['î', 'ï'],
-                    'u': ['ù', 'ü', 'û'],
-                    'o': ['ô', 'ö'],
-                    'A': ['À', 'Ã', 'Á', 'Â'],
-                    'E': ['É', 'È', 'Ê', 'Ë'],
-                    'I': ['Î', 'Ï'],
-                    'U': ['Ù', 'Ü', 'Û'],
-                    'O': ['Ô', 'Ö']}
+def nettoyer(chaine):
+    """Nettoie une chaîne de caractères:
+    - Enlève les accents.
+    - supprime les caractères non alphanumériques
+    """
+    sortie = unidecode.unidecode(chaine)
+    sortie = ''.join(e for e in sortie if e.isalnum())
+    return sortie
 
-        for (char, accented_chars) in accents.items():
-            for accented_char in accented_chars:
-                mot = mot.replace(accented_char, char)
-        return mot
-    
 def id_factory(nom, prenom, form):
     """ Construit un identifiant pour une ligne élève.
     """
     style_id = form['id_select']
     #il faut enlever les tirets, les apostrophes, etc...
-    prenom2 = desaccent(prenom)
-    prenom2 = re.sub('[\W_ ]+', '', prenom2)
-    nom2 = desaccent(nom)
-    nom2 = re.sub('[\W_ ]+', '', nom2)
+    prenom = nettoyer(prenom)
+    nom = nettoyer(nom)
     if style_id == 'nomp':
-        id = nom2.replace(' ', '').lower() + prenom2[0].lower()
+        id = nom.replace(' ', '').lower() + prenom[0].lower()
     elif style_id == 'prenomnom':
-        id = prenom2.replace(' ', '').lower() + nom2.replace(' ', '').lower()
+        id = prenom.replace(' ', '').lower() + nom.replace(' ', '').lower()
     elif style_id == 'pnom':
-        id = prenom2[0].lower() + nom2.replace(' ', '').lower()
-    else: 
+        id = prenom[0].lower() + nom.replace(' ', '').lower()
+    else:
         # Sinon, le format est "custom"
         id = form['format_id_custom']\
-            .replace('$nom', nom2.replace(' ', '').lower())\
-            .replace('$prenom', prenom2.replace(' ', '').lower())\
-            .replace('$p', prenom2[0].lower())
+            .replace('$nom', nom.replace(' ', '').lower())\
+            .replace('$prenom', prenom.replace(' ', '').lower())\
+            .replace('$p', prenom[0].lower())
     #tests sur la longueur de l'id
     if len(id) < 4:
         id = id+'IDENTIFIANT_TROP_COURT_(4_caract_min)'
@@ -71,11 +61,9 @@ def mdp_factory(ligne, form):
         nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne["Élève"].replace(nom, '')[1:]
-        #on enlève le non alphanumérique
-        prenom = re.sub('[\W_ ]+', '',prenom)
         #on met en minuscules et sans accent
         prenom = prenom.lower()
-        prenom = desaccent(prenom)
+        prenom = nettoyer(prenom)
         mdp = prenom
     elif style_mdp == "fixe":
         mdpget = form.get("mdp_fixe")

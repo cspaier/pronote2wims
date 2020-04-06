@@ -21,7 +21,12 @@ def desaccent(mot):
                     'e': ['é', 'è', 'ê', 'ë'],
                     'i': ['î', 'ï'],
                     'u': ['ù', 'ü', 'û'],
-                    'o': ['ô', 'ö']}
+                    'o': ['ô', 'ö'],
+                    'A': ['À', 'Ã', 'Á', 'Â'],
+                    'E': ['É', 'È', 'Ê', 'Ë'],
+                    'I': ['Î', 'Ï'],
+                    'U': ['Ù', 'Ü', 'Û'],
+                    'O': ['Ô', 'Ö']}
 
         for (char, accented_chars) in accents.items():
             for accented_char in accented_chars:

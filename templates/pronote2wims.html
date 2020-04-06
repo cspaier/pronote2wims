@@ -90,17 +90,25 @@ function changeSelectId() {
     document.getElementById("format_id_custom").style.display = "inline-block";
     document.getElementById("exemple_prenomnom").style.display = "None";
     document.getElementById("exemple_pnom").style.display = "None";
-
+    document.getElementById("exemple_nomp").style.display = "None";
   }
   else if (id_select == "prenomnom"){
     document.getElementById("format_id_custom").style.display = "None";
     document.getElementById("exemple_prenomnom").style.display = "inline-block";
     document.getElementById("exemple_pnom").style.display = "None";
+    document.getElementById("exemple_nomp").style.display = "None";
+  }
+  else if (id_select == "nomp"){
+    document.getElementById("format_id_custom").style.display = "None";
+    document.getElementById("exemple_prenomnom").style.display = "None";
+    document.getElementById("exemple_pnom").style.display = "None";
+    document.getElementById("exemple_nomp").style.display = "inline-block";
   }
   else{
     document.getElementById("format_id_custom").style.display = "None";
     document.getElementById("exemple_prenomnom").style.display = "None";
     document.getElementById("exemple_pnom").style.display = "inline-block";
+    document.getElementById("exemple_nomp").style.display = "None";
   }
 };
 </script>

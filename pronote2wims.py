@@ -46,10 +46,12 @@ def id_factory(nom, prenom, form):
             .replace('$p', prenom[0].lower())
     #tests sur la longueur de l'id
     if len(id) < 4:
-        id = id+'IDENTIFIANT_TROP_COURT_(4_caract_min)'
+        erreur = 'trop court: moins de 4 caractères'
     elif len(id) > 16:
-        id = id+'IDENTIFIANT_TROP_LONG_(16_caract_max)'
-    return id
+        erreur = 'trop long: plus de 16'
+    else:
+        erreur = None
+    return id, erreur
 
 def mdp_factory(prenom, form):
     """ Construit un mot de passe pour une ligne élève.
@@ -66,10 +68,30 @@ def mdp_factory(prenom, form):
         mdp = mdpget
     #tests sur la longueur de mdp
     if len(mdp) < 4:
-        mdp = mdp+'PASSWORD_TROP_COURT_(4_caract_min)'
+        erreur = 'mot de passe trop court: 4 caract min'
     elif len(mdp) > 16:
-        mdp = mdp+'PASSWORD_TROP_LONG_(16_caract_max)'
-    return mdp
+        erreur = 'mot de passe trop long: 16 caract max'
+    else:
+        erreur = None
+    return mdp, erreur
+
+def ligne_factory(ligne, form):
+    """
+    Créé les logins et mots de passe pour une ligne
+    Prend en entré un dictionnaire contenant les champs 'firstname' et 'lastname'
+    retourne un dictionnaire contenant les champs 'firstname', 'lastname', 'password', 'login' et 'erreur'
+    """
+    # on stocke les erreur dans un dict: {mdp: 'erreur du mdp', login: 'erreur du login'}
+    erreur = {}
+    mdp, erreur["mdp"] = mdp_factory(ligne['firstname'], form)
+    login, erreur['login'] = id_factory(ligne['lastname'], ligne['firstname'], form)
+    return {
+        'firstname': ligne['firstname'],
+        'lastname': ligne['lastname'],
+        'password': mdp,
+        'login': login,
+        'erreur': erreur
+    }
 
 def csv2list(csv_list, form):
     """Transforme les données csv de pronote en liste de dictionnaire au format wims.
@@ -88,14 +110,7 @@ def csv2list(csv_list, form):
             continue
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne[0].replace(nom, '')[1:]
-        mdp = mdp_factory(prenom, form)
-        login = id_factory(nom, prenom, form)
-        wims_list.append({
-            "lastname": nom,
-            "firstname": prenom,
-            "password": mdp,
-            "login": login
-        })
+        wims_list.append(ligne_factory({'lastname': prenom, 'firstname': nom}, form))
     return wims_list
 
 @app.route('/telecharger/', methods=['POST'])
@@ -160,11 +175,11 @@ def home():
 
         else:
             # pas de fichier, on travaille à partir des données json stoquées dans un champ caché. Pas beau mais ça marche.
-            wims_list = json.loads(request.form.get("wims_json", None))
+            old_wims_list = json.loads(request.form.get("wims_json", None))
+            wims_list = []
             # Il faut actualiser les champs 'password' et 'login'
-            for ligne in wims_list:
-                ligne['password'] = mdp_factory(ligne['firstname'], request.form)
-                ligne['login'] = id_factory(ligne['lastname'], ligne['firstname'], request.form)
+            for ligne in old_wims_list:
+                wims_list.append(ligne_factory(ligne, request.form))
         return render_template(
             'pronote2wims.html',
             form=request.form,

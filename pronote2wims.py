@@ -91,10 +91,10 @@ def csv2list(csv_list, form):
         mdp = mdp_factory(prenom, form)
         login = id_factory(nom, prenom, form)
         wims_list.append({
-                "lastname": nom,
-                "firstname": prenom,
-                "password": mdp,
-                "login": login
+            "lastname": nom,
+            "firstname": prenom,
+            "password": mdp,
+            "login": login
         })
     return wims_list
 

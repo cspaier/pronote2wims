@@ -46,7 +46,7 @@ def id_factory(nom, prenom, form):
             .replace('$p', prenom[0].lower())
     #tests sur la longueur de l'id
     if len(id) < 4:
-        erreur = 'trop court: moins de 4 caractères'
+        erreur = 'trop court: moins de 4'
     elif len(id) > 16:
         erreur = 'trop long: plus de 16'
     else:
@@ -68,9 +68,9 @@ def mdp_factory(prenom, form):
         mdp = mdpget
     #tests sur la longueur de mdp
     if len(mdp) < 4:
-        erreur = 'mot de passe trop court: 4 caract min'
+        erreur = 'trop court: moins de 4'
     elif len(mdp) > 16:
-        erreur = 'mot de passe trop long: 16 caract max'
+        erreur = 'trop long: plus de 16'
     else:
         erreur = None
     return mdp, erreur
@@ -83,7 +83,7 @@ def ligne_factory(ligne, form):
     """
     # on stocke les erreur dans un dict: {mdp: 'erreur du mdp', login: 'erreur du login'}
     erreur = {}
-    mdp, erreur["mdp"] = mdp_factory(ligne['firstname'], form)
+    mdp, erreur["password"] = mdp_factory(ligne['firstname'], form)
     login, erreur['login'] = id_factory(ligne['lastname'], ligne['firstname'], form)
     return {
         'firstname': ligne['firstname'],

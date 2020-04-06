@@ -5,13 +5,33 @@
     <th>Firstname</th>
     <th>Password</th>
   </tr>
-{% for eleve in wims_list %}
+  {% for eleve in wims_list %}
   <tr>
-    <td>{{eleve.login}}</td>
-    <td>{{eleve.lastname}}</td>
-    <td>{{eleve.firstname}}</td>
-    <td>{{eleve.password}}</td>
-  </tr>
-{% endfor %}
+    {% if eleve.erreur['login'] %}
+    <td class="has-text-danger has-text-weight-bold tooltip tooltip-left ">
+      <span class="tooltiptext notification is-warning">
+        {{ eleve.erreur['login'] }}
+      </span>
+      {% else %}
+      <td>
+      {% endif %}
+
+      {{eleve.login}}
+    </td>
+
+      <td>{{eleve.lastname}}</td>
+      <td>{{eleve.firstname}}</td>
+      {% if eleve.erreur['password'] %}
+      <td class="has-text-danger has-text-weight-bold tooltip tooltip-right">
+        <span class="tooltiptext notification is-warning">
+          {{ eleve.erreur['password'] }}
+        </span>
+      {% else %}
+        <td>
+      {% endif %}
+      {{eleve.password}}
+      </td>
+    </tr>
+    {% endfor %}
     <td></td>
   </table>

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pronote2wims.css') }}">
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   <title>Conversion pronote vers wims</title>
 </head>
@@ -19,12 +20,12 @@
           <p>
             Cet outil aide à convertir les données venant d'une base de donnée pronote afin de créer des classes wims.
             C'est en quelque sorte un convertisseur de fichier csv de pronote vers wims.
-
+          </p>
             <p>
               Aucune donnée n'est stoquée ou transmise et le code est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a>
               sous licence <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL-3</a>.
             </p>
-          </p>
+          <button class="button is-primary" data-tooltip="Tooltip Text">Tooltip</button>
           <hr class="hr">
 
           <form method=post enctype=multipart/form-data>

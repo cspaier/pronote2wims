@@ -1,0 +1,26 @@
+/* Tooltip container */
+.tooltip {
+  position: relative;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 14rem;
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+}
+.tooltip-left .tooltiptext{
+    top: -5px;
+  right: 105%;
+}
+.tooltip-right .tooltiptext{
+  top: -5px;
+  left: 105%;
+
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}

@@ -51,28 +51,19 @@ def id_factory(nom, prenom, form):
         id = id+'IDENTIFIANT_TROP_LONG_(16_caract_max)'
     return id
 
-def mdp_factory(ligne, form):
+def mdp_factory(prenom, form):
     """ Construit un mot de passe pour une ligne élève.
     """
     style_mdp = form['mdp_select']
     if style_mdp == "aleatoire":
         mdp = randomStringDigits(int(form.get("mdp_longueur")))
     elif style_mdp == "prenom":
-        nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
-        # On enlève le nom de la ligne et l'espace du début
-        prenom = ligne["Élève"].replace(nom, '')[1:]
-        #on met en minuscules et sans accent
-        prenom = prenom.lower()
-        prenom = nettoyer(prenom)
         mdp = prenom
     elif style_mdp == "fixe":
         mdpget = form.get("mdp_fixe")
         if mdpget == '':
             mdpget = 'bonjour'# Je suis pas certain que ce soit bien de faire ca.
         mdp = mdpget
-    else:
-        # Sinon, le style est "date de naissance"
-        mdp = ligne['birthday'].replace('/', '')
     #tests sur la longueur de mdp
     if len(mdp) < 4:
         mdp = mdp+'PASSWORD_TROP_COURT_(4_caract_min)'
@@ -88,7 +79,7 @@ def csv2list(csv_list, form):
         nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne["Élève"].replace(nom, '')[1:]
-        mdp = mdp_factory(ligne, form)
+        mdp = mdp_factory(prenom, form)
         login = id_factory(nom, prenom, form)
         #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
         if nom != '' :
@@ -96,7 +87,6 @@ def csv2list(csv_list, form):
                 "lastname": nom,
                 "firstname": prenom,
                 "password": mdp,
-                "birthday": ligne['birthday'],
                 "login": login
             })
     return wims_list
@@ -157,8 +147,7 @@ def home():
             file = request.files['file']
             if not(file and allowed_file(file.filename)):
                 return redirect(request.url)
-            # on remplace 'Né(e) le' par 'birthday' pour pouvoir utiliser directement mdp_factory
-            csv_texte = file.read().decode('utf-8-sig').replace('Né(e) le', 'birthday').splitlines()
+            csv_texte = file.read().decode('utf-8-sig').splitlines()
             reader = csv.DictReader(csv_texte, delimiter=";")
             wims_list = csv2list(reader, request.form)
 
@@ -167,7 +156,7 @@ def home():
             wims_list = json.loads(request.form.get("wims_json", None))
             # Il faut actualiser les champs 'password' et 'login'
             for ligne in wims_list:
-                ligne['password'] = mdp_factory(ligne, request.form)
+                ligne['password'] = mdp_factory(ligne['firstname'], request.form)
                 ligne['login'] = id_factory(ligne['lastname'], ligne['firstname'], request.form)
         return render_template(
             'pronote2wims.html',

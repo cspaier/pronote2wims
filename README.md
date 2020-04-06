@@ -4,6 +4,9 @@ Conversion de données pronote vers csv pour usage dans wims.
 
 Hébergé sur https://pronote2wims.herokuapp.com/
 
+## Branche birthday
+Cette branche propose à l'utilisateur de générer le mot de passe à partir de la date de naissance ce qui est contraire aux respect des données pronotes. 
+
 ## Déploiement local
 
 1. créer un environement virtuel python: `virtualenv -P python3 venv`

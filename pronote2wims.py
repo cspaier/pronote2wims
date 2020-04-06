@@ -72,13 +72,18 @@ def mdp_factory(prenom, form):
     return mdp
 
 def csv2list(csv_list, form):
-    """Transforme les données csv de pronote en liste de dictionnaire au format wims."""
+    """Transforme les données csv de pronote en liste de dictionnaire au format wims.
+        Les exports pronote on une chose en commun: le premier champ est le NOM prénom
+        Les headers sont variables et ils nous faut juste le premier champ.
+        csv_list est une liste de champs. On chope le premier
+    """
     wims_list = []
+    # On ne prend pas la première ligne qui est le header variable
     for ligne in csv_list:
         # Les noms de familles sont en MAJUSCULES
-        nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne["Élève"]))
+        nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne[0]))
         # On enlève le nom de la ligne et l'espace du début
-        prenom = ligne["Élève"].replace(nom, '')[1:]
+        prenom = ligne[0].replace(nom, '')[1:]
         mdp = mdp_factory(prenom, form)
         login = id_factory(nom, prenom, form)
         #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
@@ -148,7 +153,7 @@ def home():
             if not(file and allowed_file(file.filename)):
                 return redirect(request.url)
             csv_texte = file.read().decode('utf-8-sig').splitlines()
-            reader = csv.DictReader(csv_texte, delimiter=";")
+            reader = csv.reader(csv_texte, delimiter=";")
             wims_list = csv2list(reader, request.form)
 
         else:

@@ -82,18 +82,20 @@ def csv2list(csv_list, form):
     for ligne in csv_list:
         # Les noms de familles sont en MAJUSCULES
         nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne[0]))
+        #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
+        # Ca fonctionne tant que pronote ne rajoute pas des champs non élèves contenant des mots en majuscules
+        if nom == '':
+            continue
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne[0].replace(nom, '')[1:]
         mdp = mdp_factory(prenom, form)
         login = id_factory(nom, prenom, form)
-        #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
-        if nom != '' :
-            wims_list.append({
+        wims_list.append({
                 "lastname": nom,
                 "firstname": prenom,
                 "password": mdp,
                 "login": login
-            })
+        })
     return wims_list
 
 @app.route('/telecharger/', methods=['POST'])

@@ -1,115 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-      <meta charset="utf-8">
-    <title>Conversion pronote vers wims</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <title>Conversion pronote vers wims</title>
 </head>
 <body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Conversion pronote vers wims</h1>
+      <hr class="hr">
 
-    <h1>Conversion pronote vers wims</h1>
-    <div style="display:flex">
-      <div style="width:50%">
+      <div class="columns">
+        <div class="column">
 
-    <form method=post enctype=multipart/form-data>
-      <h2>Données pronote</h2>
-      <label>Fichier csv</label>
-        <input type=file name=file value={{file}}>
-        <input type=submit value=Upload>
-      <h2>Configuration wims</h2>
-      <label>Mot de passe</label>
-      <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()">
-        <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe (le même pour tous les participants)</option>
-        <option value="prenom" {% if form.mdp_select=="prenom" %}selected="selected" {% endif %}>Prénom</option>
-        <option value="aleatoire" {% if form.mdp_select=="aleatoire" %}selected="selected" {% endif %}>Aléatoire</option>
-        <option value="date_naissance"{% if form.mdp_select=="date_naissance" %}selected="selected" {% endif %}>Date de naissance</option>
-      </select>
-      <input id="mdp_fixe" type=text name=mdp_fixe placeholder="mot de passe fixe" value="{{form.mdp_fixe}}">
-      <div id="mdp_longueur"style="display:None;">
-      <label>taille</label>
-        <input type="number"  name="mdp_longueur" min="5" max="10" value={{form.mdp_longueur}} >
-      </div>
-      <br><br>
-      <label>Format de l'identifiant</label>
-        <select id="id_select" name=id_select onchange="changeSelectId()">
-          <option value="nomp" {% if form.id_select=="nomp" %}selected="selected" {% endif %}>nom+p</option>
-          <option value="prenomnom" {% if form.id_select=="prenomnom" %}selected="selected" {% endif %}>prénom+nom</option>
-          <option value="pnom" {% if form.id_select=="pnom" %}selected="selected" {% endif %}>p+nom</option>
-          <option value="custom"{% if form.id_select=="custom" %}selected="selected" {% endif %}>personalisé</option>
-        </select>
-        <p id="exemple_nomp">Exemple: brassensg</p>
-        <p id="exemple_prenomnom">Exemple: georgesbrassens</p>
-        <p id="exemple_pnom">Exemple: gbrassens</p>
-        <div id="format_id_custom">
-          <input  type=text name=format_id_custom placeholder="format de l'Identifiant wims" value="{{form.format_id_custom}}">
-          <p>Utiliser <b>$nom</b> pour le nom complet, <b>$prenom</b> pour le prénom complet, <b>$p</b> pour la première lettre du prénom</p>
+          <form method=post enctype=multipart/form-data>
+            <h2 class="subtitle">Données pronote</h2>
+            <div class="columns">
+              <div class="column">
+                <div class="file has-name">
+                  <label class="file-label">
+                    <input class="file-input" type="file" name="file" id="file" value="{{form.file}}">
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                      </span>
+                      <span class="file-label">
+                        Fichier CSV
+                      </span>
+                    </span>
+                    <span class="file-name"id="filename">
+                      {% if form.file %}
+                      {{form.file.filename}}
+                      {% else %}
+                      Aucun fichier séléctionné
+                      {% endif %}
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div class="column">
+                <div class="is-pulled-right">
+                  <input class="button is-primary" type=submit value=Upload>
+                </div>
+              </div>
+            </div>
+
+            <hr class="hr">
+
+            <h2 class="subtitle">Configuration wims</h2>
+            <div class="field">
+              <div class="columns">
+                <div class="column">
+                  <label class="label">Mot de passe</label>
+                  <div class="control has-icons-left">
+                    <div class="select ">
+                      <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()">
+                        <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe (le même pour tous les participants)</option>
+                        <option value="prenom" {% if form.mdp_select=="prenom" %}selected="selected" {% endif %}>Prénom</option>
+                        <option value="aleatoire" {% if form.mdp_select=="aleatoire" %}selected="selected" {% endif %}>
+                          <i class="fas fa-random"></i>
+                          Aléatoire
+                        </option>
+                        <option value="date_naissance"{% if form.mdp_select=="date_naissance" %}selected="selected" {% endif %}>Date de naissance</option>
+                      </select>
+                    </div>
+                    <div class="icon is-small is-left">
+                      <i class="fas fa-lock"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div id="mdp_fixe">
+                    <label class="label">Même pour tous</label>
+                    <div class="control">
+                      <input type=text name=mdp_fixe placeholder="mot de passe" value="{{form.mdp_fixe}}">
+                    </div>
+                  </div>
+                  <div id="mdp_longueur"style="display:None;">
+                    <label class="label">Taille</label>
+                    <div class="control">
+                      <input type="number"  name="mdp_longueur" min="5" max="10" value={{form.mdp_longueur}} >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="columns">
+                <div class="column">
+                  <label class="label">Format de l'identifiant</label>
+                  <div class="control has-icons-left">
+                    <div class="select">
+                      <select id="id_select" name="id_select" onchange="changeSelectId()">
+                        <option value="nomp" {% if form.id_select=="nomp" %}selected="selected" {% endif %}>nom+p</option>
+                        <option value="prenomnom" {% if form.id_select=="prenomnom" %}selected="selected" {% endif %}>prénom+nom</option>
+                        <option value="pnom" {% if form.id_select=="pnom" %}selected="selected" {% endif %}>p+nom</option>
+                        <option value="custom"{% if form.id_select=="custom" %}selected="selected" {% endif %}>personalisé</option>
+                      </select>
+                    </div>
+                    <div class="icon is-small is-left">
+                      <i class="fas fa-user"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div id="exemple_nomp">
+                    <label class="label">Exemple</label>
+                    <p>brassensg</p>
+                  </div>
+                  <div id="exemple_prenomnom">
+                    <label class="label">Exemple</label>
+                    <p>georgesbrassens</p>
+                  </div>
+                  <div id="exemple_pnom">
+                    <label class="label">Exemple</label>
+                    <p>gbrassens</p>
+                  </div>
+                  <div id="format_id_custom">
+                    <label class="label">Format personalisé</label>
+                    <input  type=text name=format_id_custom placeholder="$p.$nom" value="{{form.format_id_custom}}">
+                  </div>
+                </div>
+              </div>
+              <div id="format_id_custom_help" class="notification">
+                <p>Vous pouvez utiliser:
+                  <ul>
+                    <li><b>$nom</b> pour le nom complet</li>
+                    <li><b>$prenom</b> pour le prénom complet</li>
+                    <li><b>$p</b> pour la première lettre du prénom</li>
+                  </ul>
+                </p>
+              </div>
+            </div>
+            {% if wims_list %}
+            <button class="button is-primary has-icons-left" type="submit" value="Prévisualisation">
+              <span class="icon is-small">
+                <i class="fas fa-sync"></i>
+              </span>
+              <span>Prévisualiser</span>
+            </button>
+            {% endif %}
+            <input type=hidden name=wims_json value='{{wims_json}}'>
+          </form>
+          <hr class="hr">
+
+          <p>Aucune donnée n'est stoquée ou transmise.</p>
+          <p> Le code de cet outil est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a></p>
         </div>
-      <br><br>
 
-        <input type=submit value=Prévisualisation>
+        <div class="column">
+          <div class="columns">
+            <div class="column">
+              <h2 class="subtitle"> Identifiants wims</h2>
+            </div>
+            {% if wims_list %}
+            <div class="column">
+              <div class="is-pulled-right">
+                <form method=post enctype=multipart/form-data action="/telecharger/">
+                  <input type=hidden name=wims_json value='{{wims_json}}'>
+                  <button class="button is-primary has-icon-left" type=submit>
+                    <span class="icon is-small">
+                      <i class="fas fa-download"></i>
+                    </span>
+                    <span>Télécharger le csv</span>
+                  </button>
+                </form>
+              </div>
+            </div>
 
+          </div>
 
-      <input type=hidden name=wims_json value='{{wims_json}}'>
-    </form>
-    <p>Aucune donnée n'est stoquée ou analysée. Le code de cet outil est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a></p>
-  </div>
-  <div style="width:50%">
-    <h2> Identifiants wims</h2>
-    {% if wims_list %}
-      <form method=post enctype=multipart/form-data action="/telecharger/">
-        <input type=hidden name=wims_json value='{{wims_json}}'>
-        <input type=submit value=Télécharger le csv>
-      </form>
-      {% include 'table.html'%}
-    {% endif %}
-  </div>
-  </div>
+          {% include 'table.html'%}
+          {% else %}
+        </div>
 
-</body>
-<script>
-changeSelectMdp()
-changeSelectId()
-function changeSelectMdp() {
-  var mdp_select = document.getElementById("mdp_select").value
-  if (mdp_select == "fixe"){
-    document.getElementById("mdp_fixe").style.display = "inline-block";
-    document.getElementById("mdp_longueur").style.display = "None";
+        {% endif %}
 
-  }
-  else if (mdp_select == "aleatoire"){
-    document.getElementById("mdp_fixe").style.display = "None";
-    document.getElementById("mdp_longueur").style.display = "inline-block";
-  }
-  else{
-    document.getElementById("mdp_fixe").style.display = "None";
-    document.getElementById("mdp_longueur").style.display = "None";
-  }
-};
-function changeSelectId() {
-  var id_select = document.getElementById("id_select").value
-  if (id_select == "custom"){
-    document.getElementById("format_id_custom").style.display = "inline-block";
-    document.getElementById("exemple_prenomnom").style.display = "None";
-    document.getElementById("exemple_pnom").style.display = "None";
-    document.getElementById("exemple_nomp").style.display = "None";
-  }
-  else if (id_select == "prenomnom"){
-    document.getElementById("format_id_custom").style.display = "None";
-    document.getElementById("exemple_prenomnom").style.display = "inline-block";
-    document.getElementById("exemple_pnom").style.display = "None";
-    document.getElementById("exemple_nomp").style.display = "None";
-  }
-  else if (id_select == "nomp"){
-    document.getElementById("format_id_custom").style.display = "None";
-    document.getElementById("exemple_prenomnom").style.display = "None";
-    document.getElementById("exemple_pnom").style.display = "None";
-    document.getElementById("exemple_nomp").style.display = "inline-block";
-  }
-  else{
-    document.getElementById("format_id_custom").style.display = "None";
-    document.getElementById("exemple_prenomnom").style.display = "None";
-    document.getElementById("exemple_pnom").style.display = "inline-block";
-    document.getElementById("exemple_nomp").style.display = "None";
-  }
-};
-</script>
-</html>
+      </div>
+    </div>
+    <div>
+    </section>
+
+  </body>
+  <script>
+  changeSelectMdp()
+  changeSelectId()
+  function changeSelectMdp() {
+    var mdp_select = document.getElementById("mdp_select").value
+    if (mdp_select == "fixe"){
+      document.getElementById("mdp_fixe").style.display = "inline-block";
+      document.getElementById("mdp_longueur").style.display = "None";
+
+    }
+    else if (mdp_select == "aleatoire"){
+      document.getElementById("mdp_fixe").style.display = "None";
+      document.getElementById("mdp_longueur").style.display = "inline-block";
+    }
+    else{
+      document.getElementById("mdp_fixe").style.display = "None";
+      document.getElementById("mdp_longueur").style.display = "None";
+    }
+  };
+  function changeSelectId() {
+    var id_select = document.getElementById("id_select").value
+    if (id_select == "custom"){
+      document.getElementById("format_id_custom").style.display = "inline-block";
+      document.getElementById("format_id_custom_help").style.display = "inline-block";
+      document.getElementById("exemple_prenomnom").style.display = "None";
+      document.getElementById("exemple_pnom").style.display = "None";
+      document.getElementById("exemple_nomp").style.display = "None";
+    }
+    else if (id_select == "prenomnom"){
+      document.getElementById("format_id_custom").style.display = "None";
+      document.getElementById("format_id_custom_help").style.display = "None";
+      document.getElementById("exemple_prenomnom").style.display = "inline-block";
+      document.getElementById("exemple_pnom").style.display = "None";
+      document.getElementById("exemple_nomp").style.display = "None";
+    }
+    else if (id_select == "nomp"){
+      document.getElementById("format_id_custom").style.display = "None";
+      document.getElementById("format_id_custom_help").style.display = "None";
+      document.getElementById("exemple_prenomnom").style.display = "None";
+      document.getElementById("exemple_pnom").style.display = "None";
+      document.getElementById("exemple_nomp").style.display = "inline-block";
+    }
+    else{
+      document.getElementById("format_id_custom").style.display = "None";
+      document.getElementById("format_id_custom_help").style.display = "None";
+      document.getElementById("exemple_prenomnom").style.display = "None";
+      document.getElementById("exemple_pnom").style.display = "inline-block";
+      document.getElementById("exemple_nomp").style.display = "None";
+    }
+  };
+
+  //https://github.com/chintanbanugaria/bulma-file-upload/blob/master/index.html
+  var file = document.getElementById("file");
+  file.onchange = function(){
+    if(file.files.length > 0)
+    {
+      document.getElementById('filename').innerHTML = file.files[0].name;
+    }
+  };
+  </script>
+  </html>

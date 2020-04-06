@@ -15,14 +15,28 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def desaccent(mot):
+        """ supprime les accents du texte source """
+        accents = { 'a': ['à', 'ã', 'á', 'â'],
+                    'e': ['é', 'è', 'ê', 'ë'],
+                    'i': ['î', 'ï'],
+                    'u': ['ù', 'ü', 'û'],
+                    'o': ['ô', 'ö']}
 
+        for (char, accented_chars) in accents.items():
+            for accented_char in accented_chars:
+                mot = mot.replace(accented_char, char)
+        return mot
+    
 def id_factory(nom, prenom, form):
     """ Construit un identifiant pour une ligne élève.
     """
     style_id = form['id_select']
     #il faut enlever les tirets, les apostrophes, etc...
-    prenom2=re.sub('[\W_ ]+', '',prenom)
-    nom2=re.sub('[\W_ ]+', '',nom)
+    prenom2 = desaccent(prenom)
+    prenom2 = re.sub('[\W_ ]+', '', prenom2)
+    nom2 = desaccent(nom)
+    nom2 = re.sub('[\W_ ]+', '', nom2)
     if style_id == 'nomp':
         id = nom2.replace(' ', '').lower() + prenom2[0].lower()
     elif style_id == 'prenomnom':
@@ -54,8 +68,9 @@ def mdp_factory(ligne, form):
         prenom = ligne["Élève"].replace(nom, '')[1:]
         #on enlève le non alphanumérique
         prenom = re.sub('[\W_ ]+', '',prenom)
-        #on met en minuscules
+        #on met en minuscules et sans accent
         prenom = prenom.lower()
+        prenom = desaccent(prenom)
         mdp = prenom
     elif style_mdp == "fixe":
         mdpget = form.get("mdp_fixe")

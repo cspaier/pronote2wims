@@ -28,4 +28,4 @@ Normalement on a un retour du type:
 Ouvrir l'url http://127.0.0.1:5000/ pour tester.
 
 ## TODO
-1. html/css pour que ça ait de la gueule
+Voir issues

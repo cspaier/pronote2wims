@@ -122,7 +122,7 @@ function toggleTabs(tabName){
 
 function tableToJson(table) {
   var data = []; // first row needs to be headers
-  var headers = ['login', 'firstname', 'lastname', 'password'];
+  var headers = ['login', 'lastname', 'firstname', 'password'];
   // go through cells
   for (var i=1; i<table.rows.length; i++) {
     var tableRow = table.rows[i];

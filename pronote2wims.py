@@ -60,7 +60,7 @@ def mdp_factory(prenom, form):
     if style_mdp == "aleatoire":
         mdp = randomStringDigits(int(form.get("mdp_longueur")))
     elif style_mdp == "prenom":
-        mdp = prenom
+        mdp = nettoyer(prenom).replace(' ', '')
     elif style_mdp == "fixe":
         mdp = form.get("mdp_fixe")
     #tests sur la longueur de mdp
@@ -107,7 +107,7 @@ def csv2list(csv_list, form):
             continue
         # On enlève le nom de la ligne et l'espace du début
         prenom = ligne[0].replace(nom, '')[1:]
-        wims_list.append(ligne_factory({'lastname': prenom, 'firstname': nom}, form))
+        wims_list.append(ligne_factory({'lastname': nom, 'firstname': prenom}, form))
     return wims_list
 
 @app.route('/telecharger/', methods=['POST'])

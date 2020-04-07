@@ -157,6 +157,8 @@
       <input class="wims-json" type=hidden name=wims_json value='{{wims_json}}'>
     </form>
   </div><!-- column -->
+  <div class="column is-1">
+  </div>
 
   <div class="column">
     <div class="columns">
@@ -178,11 +180,11 @@
         </div>
       </div>
     </div>
-      {% include 'table.html'%}
+    {% include 'table.html'%}
 
-  {% else %}
-</div>
+    {% else %}
+  </div>
 
-{% endif %}
+  {% endif %}
 </div>
 </div>

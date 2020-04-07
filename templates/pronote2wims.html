@@ -21,13 +21,13 @@
             Cet outil aide à convertir les données venant d'une base de donnée pronote afin de créer des classes wims.
             C'est en quelque sorte un convertisseur de fichier csv de pronote vers wims.
           </p>
-            <p>
-              Aucune donnée n'est stoquée ou transmise et le code est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a>
-              sous licence <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL-3</a>.
-            </p>
+          <p>
+            Aucune donnée n'est stoquée ou transmise et le code est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a>
+            sous licence <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL-3</a>.
+          </p>
           <hr class="hr">
 
-          <form method=post enctype=multipart/form-data>
+          <form method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
             <h2 class="subtitle">Données pronote</h2>
             <div class="columns">
               <div class="column">
@@ -85,8 +85,23 @@
                 <div class="column">
                   <div id="mdp_fixe">
                     <label class="label">Même pour tous</label>
-                    <div class="control">
-                      <input type=text name=mdp_fixe placeholder="mot de passe" value="{{form.mdp_fixe}}">
+                    <div class="control has-icons-right">
+                      <input
+                        class="input"
+                        id="mdp_fixe_input"
+                        onchange="validateMdpFixe()"
+                        type="text" name="mdp_fixe"
+                        placeholder="mot de passe"
+                        value="{{form.mdp_fixe}}"
+                        maxlength="16"
+                        oninput="validateMdpFixe()"
+                        onkeydown="validateMdpFixe()"
+                        onpaste="validateMdpFixe()"
+                      >
+                      <span class="icon is-small is-right mdp-fixe-warning is-invisible">
+                        <i class="fas fa-exclamation-triangle"></i>
+                      </span>
+                      <p class="help is-danger mdp-fixe-warning is-invisible">Doit avoir plus de 4 caractères</p>
                     </div>
                   </div>
                   <div id="mdp_longueur"style="display:None;">
@@ -195,6 +210,7 @@
   <script>
   changeSelectMdp()
   changeSelectId()
+  validateMdpFixe()
   function changeSelectMdp() {
     var mdp_select = document.getElementById("mdp_select").value
     if (mdp_select == "fixe"){
@@ -251,5 +267,35 @@
       document.getElementById('filename').innerHTML = file.files[0].name;
     }
   };
+
+  function validateForm(){
+    // vérifie le formulaire avant de l'envoyer
+    var mdp_select = document.getElementById("mdp_select").value
+    if (mdp_select == "fixe"){
+      return validateMdpFixe()
+    }
+    return true;
+  }
+
+  function validateMdpFixe(){
+    // On va seulement tester si mdp < 4 car l'input a maxlength="16"
+    var element = document.getElementById("mdp_fixe_input")
+    if (element.value.length < 4){
+      element.classList.add("is-danger")
+      var warnings = document.getElementsByClassName("mdp-fixe-warning")
+      for(var i = 0; i < warnings.length; i++){
+        warnings[i].classList.remove('is-invisible')
+      }
+      return false
+    } else {
+      element.classList.remove("is-danger")
+      element.classList.add("is-success")
+      var warnings = document.getElementsByClassName("mdp-fixe-warning")
+      for(var i = 0; i < warnings.length; i++){
+        warnings[i].classList.add('is-invisible')
+      }
+      return true
+    }
+  }
   </script>
   </html>

@@ -62,10 +62,7 @@ def mdp_factory(prenom, form):
     elif style_mdp == "prenom":
         mdp = prenom
     elif style_mdp == "fixe":
-        mdpget = form.get("mdp_fixe")
-        if mdpget == '':
-            mdpget = 'bonjour'# Je suis pas certain que ce soit bien de faire ca.
-        mdp = mdpget
+        mdp = form.get("mdp_fixe")
     #tests sur la longueur de mdp
     if len(mdp) < 4:
         erreur = 'trop court: moins de 4'

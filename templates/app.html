@@ -1,0 +1,190 @@
+<div class="columns">
+  <div class="column">
+    <h2 class="subtitle">A propos</h2>
+    <p>
+      Cet outil aide à convertir les données venant d'une base de donnée pronote afin de créer des classes wims.
+      C'est en quelque sorte un convertisseur de fichier csv de pronote vers wims.
+    </p>
+    <p>
+      Aucune donnée n'est stoquée ou transmise et le code est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a>
+      sous licence <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL-3</a>.
+    </p>
+    <hr class="hr">
+
+    <form method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+      <h2 class="subtitle">Données pronote</h2>
+      <div class="columns">
+        <div class="column">
+          <div class="file has-name">
+            <label class="file-label">
+              <input class="file-input" type="file" name="file" id="file" value="{{form.file}}">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Fichier CSV
+                </span>
+              </span>
+              <span class="file-name"id="filename">
+                {% if form.file %}
+                {{form.file.filename}}
+                {% else %}
+                Aucun fichier séléctionné
+                {% endif %}
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="column">
+          <div class="is-pulled-right">
+            <input id="upload-button" class="button is-primary" type=submit value=Upload>
+          </div>
+        </div>
+      </div>
+
+      <hr class="hr">
+
+      <h2 class="subtitle">Configuration wims</h2>
+      <div class="field">
+        <div class="columns">
+          <div class="column">
+            <label class="label">Mot de passe</label>
+            <div class="control has-icons-left">
+              <div class="select">
+                <select id="mdp_select" name=mdp_select onchange="changeSelectMdp(); validateForm()">
+                  <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe (le même pour tous les participants)</option>
+                  <option value="prenom" {% if form.mdp_select=="prenom" %}selected="selected" {% endif %}>Prénom</option>
+                  <option value="aleatoire" {% if form.mdp_select=="aleatoire" %}selected="selected" {% endif %}>
+                    <i class="fas fa-random"></i>
+                    Aléatoire
+                  </option>
+                </select>
+              </div>
+              <div class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </div>
+              <p class="help is-invisible">Just to prevent height moving</p>
+            </div>
+          </div>
+          <div class="column">
+            <div id="mdp_fixe">
+              <label class="label">Même pour tous</label>
+              <div class="control has-icons-right">
+                <input
+                class="input"
+                id="mdp_fixe_input"
+                onchange="validateMdpFixe()"
+                type="text" name="mdp_fixe"
+                placeholder="mot de passe"
+                value="{{form.mdp_fixe}}"
+                maxlength="16"
+                oninput="validateMdpFixe()"
+                onkeydown="validateMdpFixe()"
+                onpaste="validateMdpFixe()"
+                >
+                <span class="icon is-small is-right mdp-fixe-warning is-invisible">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </span>
+                <p class="help is-danger mdp-fixe-warning is-invisible">Doit avoir plus de 4 caractères</p>
+              </div>
+            </div>
+            <div id="mdp_longueur"style="display:None;">
+              <label class="label">Taille</label>
+              <div class="control">
+                <input type="number"  name="mdp_longueur" min="5" max="10" value={{form.mdp_longueur}} >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="columns">
+          <div class="column">
+            <label class="label">Format de l'identifiant</label>
+            <div class="control has-icons-left">
+              <div class="select">
+                <select id="id_select" name="id_select" onchange="changeSelectId()">
+                  <option value="nomp" {% if form.id_select=="nomp" %}selected="selected" {% endif %}>nom+p</option>
+                  <option value="prenomnom" {% if form.id_select=="prenomnom" %}selected="selected" {% endif %}>prénom+nom</option>
+                  <option value="pnom" {% if form.id_select=="pnom" %}selected="selected" {% endif %}>p+nom</option>
+                  <option value="custom"{% if form.id_select=="custom" %}selected="selected" {% endif %}>personalisé</option>
+                </select>
+              </div>
+              <div class="icon is-small is-left">
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div id="exemple_nomp">
+              <label class="label">Exemple</label>
+              <p>brassensg</p>
+            </div>
+            <div id="exemple_prenomnom">
+              <label class="label">Exemple</label>
+              <p>georgesbrassens</p>
+            </div>
+            <div id="exemple_pnom">
+              <label class="label">Exemple</label>
+              <p>gbrassens</p>
+            </div>
+            <div id="format_id_custom">
+              <label class="label">Format personalisé</label>
+              <input  type=text name=format_id_custom placeholder="$p.$nom" value="{{form.format_id_custom}}">
+            </div>
+          </div>
+        </div>
+        <div id="format_id_custom_help" class="notification">
+          <p>Vous pouvez utiliser:
+            <ul>
+              <li><b>$nom</b> pour le nom complet</li>
+              <li><b>$prenom</b> pour le prénom complet</li>
+              <li><b>$p</b> pour la première lettre du prénom</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+      {% if wims_list %}
+      <button id="preview-button" class="button is-primary has-icons-left" type="submit" value="Prévisualisation">
+        <span class="icon is-small">
+          <i class="fas fa-sync"></i>
+        </span>
+        <span>Prévisualiser</span>
+      </button>
+      {% endif %}
+      <input type=hidden name=wims_json value='{{wims_json}}'>
+    </form>
+  </div>
+
+  <div class="column">
+    <div class="columns">
+      <div class="column">
+        <h2 class="subtitle"> Identifiants wims</h2>
+      </div>
+      {% if wims_list %}
+      <div class="column">
+        <div class="is-pulled-right">
+          <form method=post enctype=multipart/form-data action="/telecharger/">
+            <input type=hidden name=wims_json value='{{wims_json}}'>
+            <button class="button is-primary has-icon-left" type=submit>
+              <span class="icon is-small">
+                <i class="fas fa-download"></i>
+              </span>
+              <span>Télécharger le csv</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+    {% include 'table.html'%}
+    {% else %}
+  </div>
+
+  {% endif %}
+
+</div>
+</div>

@@ -98,3 +98,24 @@ function validateMdpFixe(){
     return true
   }
 }
+
+function toggleTabs(tabName){
+  // set active to clicked tab and show/hide content
+  var tabTools = document.getElementById('tab-tools')
+  var tabHelp = document.getElementById('tab-help')
+  var contentTools = document.getElementById('tools-content')
+  var contentHelp = document.getElementById('help-content')
+
+
+  if (tabName=='tools'){
+    tabTools.classList.add('is-active')
+    tabHelp.classList.remove('is-active')
+    contentTools.classList.remove('is-hidden')
+    contentHelp.classList.add('is-hidden')
+  } else {
+    tabTools.classList.remove('is-active')
+    tabHelp.classList.add('is-active')
+    contentTools.classList.add('is-hidden')
+    contentHelp.classList.remove('is-hidden')
+  }
+}

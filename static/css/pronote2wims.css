@@ -6,7 +6,9 @@
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 14rem;
+  width: 12rem;
+  text-align: center;
+  padding: 0.7rem 0.7rem 0.7rem 0.7rem;
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;

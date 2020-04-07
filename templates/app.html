@@ -156,7 +156,7 @@
       {% endif %}
       <input class="wims-json" type=hidden name=wims_json value='{{wims_json}}'>
     </form>
-  </div>
+  </div><!-- column -->
 
   <div class="column">
     <div class="columns">
@@ -177,14 +177,12 @@
           </form>
         </div>
       </div>
-
     </div>
+      {% include 'table.html'%}
 
-    {% include 'table.html'%}
-    {% else %}
-  </div>
+  {% else %}
+</div>
 
-  {% endif %}
-
+{% endif %}
 </div>
 </div>

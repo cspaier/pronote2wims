@@ -62,6 +62,10 @@ function validateForm(){
   if (mdp_select == "fixe"){
     return validateMdpFixe()
   }
+  // Le mot de passe fixe est la seule vérification (pour l'instant)
+  // on retourne donc true et active les boutons
+  document.getElementById('preview-button').disabled = false
+  document.getElementById('upload-button').disabled = false
   return true;
 }
 
@@ -69,19 +73,28 @@ function validateMdpFixe(){
   // On va seulement tester si mdp < 4 car l'input a maxlength="16"
   var element = document.getElementById("mdp_fixe_input")
   if (element.value.length < 4){
+    // met le champ en rouge
     element.classList.add("is-danger")
+    // affiche les avertissements
     var warnings = document.getElementsByClassName("mdp-fixe-warning")
     for(var i = 0; i < warnings.length; i++){
       warnings[i].classList.remove('is-invisible')
     }
+    // désactive  les boutons
+    document.getElementById('preview-button').disabled = true
+    document.getElementById('upload-button').disabled = true
+
     return false
   } else {
+    // le contraire
     element.classList.remove("is-danger")
     element.classList.add("is-success")
     var warnings = document.getElementsByClassName("mdp-fixe-warning")
     for(var i = 0; i < warnings.length; i++){
       warnings[i].classList.add('is-invisible')
     }
+    document.getElementById('preview-button').disabled = false
+    document.getElementById('upload-button').disabled = false
     return true
   }
 }

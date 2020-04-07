@@ -54,7 +54,7 @@
               </div>
               <div class="column">
                 <div class="is-pulled-right">
-                  <input class="button is-primary" type=submit value=Upload>
+                  <input id="upload-button" class="button is-primary" type=submit value=Upload>
                 </div>
               </div>
             </div>
@@ -67,8 +67,8 @@
                 <div class="column">
                   <label class="label">Mot de passe</label>
                   <div class="control has-icons-left">
-                    <div class="select ">
-                      <select id="mdp_select" name=mdp_select onchange="changeSelectMdp()">
+                    <div class="select">
+                      <select id="mdp_select" name=mdp_select onchange="changeSelectMdp(); validateForm()">
                         <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe (le même pour tous les participants)</option>
                         <option value="prenom" {% if form.mdp_select=="prenom" %}selected="selected" {% endif %}>Prénom</option>
                         <option value="aleatoire" {% if form.mdp_select=="aleatoire" %}selected="selected" {% endif %}>
@@ -80,6 +80,7 @@
                     <div class="icon is-small is-left">
                       <i class="fas fa-lock"></i>
                     </div>
+                    <p class="help is-invisible">Just to prevent height moving</p>
                   </div>
                 </div>
                 <div class="column">
@@ -162,7 +163,7 @@
               </div>
             </div>
             {% if wims_list %}
-            <button class="button is-primary has-icons-left" type="submit" value="Prévisualisation">
+            <button id="preview-button" class="button is-primary has-icons-left" type="submit" value="Prévisualisation">
               <span class="icon is-small">
                 <i class="fas fa-sync"></i>
               </span>
@@ -211,6 +212,6 @@
   <script>
   changeSelectMdp()
   changeSelectId()
-  validateMdpFixe()
+  validateForm()
   </script>
   </html>

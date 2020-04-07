@@ -1,15 +1,20 @@
 function changeSelectMdp() {
   var mdp_select = document.getElementById("mdp_select").value
+  var helpers = {
+    'fixe': 'Le même pour tous les participants',
+    'aleatoire': 'Alphanumérique au hasard',
+    'prenom': 'Exemple: georges'
+  }
+  document.getElementById('mdp-select-id').innerHTML = helpers[mdp_select]
   if (mdp_select == "fixe"){
     document.getElementById("mdp_fixe").style.display = "inline-block";
     document.getElementById("mdp_longueur").style.display = "None";
-
   }
   else if (mdp_select == "aleatoire"){
     document.getElementById("mdp_fixe").style.display = "None";
     document.getElementById("mdp_longueur").style.display = "inline-block";
   }
-  else{
+  else{//prénom
     document.getElementById("mdp_fixe").style.display = "None";
     document.getElementById("mdp_longueur").style.display = "None";
   }
@@ -63,9 +68,8 @@ function validateForm(){
     return validateMdpFixe()
   }
   // Le mot de passe fixe est la seule vérification (pour l'instant)
-  // on retourne donc true et active les boutons
+  // on retourne donc true et active le boutons
   document.getElementById('preview-button').disabled = false
-  document.getElementById('upload-button').disabled = false
   return true;
 }
 
@@ -80,9 +84,8 @@ function validateMdpFixe(){
     for(var i = 0; i < warnings.length; i++){
       warnings[i].classList.remove('is-invisible')
     }
-    // désactive  les boutons
+    // désactive  le boutons
     document.getElementById('preview-button').disabled = true
-    document.getElementById('upload-button').disabled = true
 
     return false
   } else {
@@ -94,7 +97,6 @@ function validateMdpFixe(){
       warnings[i].classList.add('is-invisible')
     }
     document.getElementById('preview-button').disabled = false
-    document.getElementById('upload-button').disabled = false
     return true
   }
 }

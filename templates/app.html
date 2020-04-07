@@ -53,7 +53,7 @@
             <div class="control has-icons-left">
               <div class="select">
                 <select id="mdp_select" name=mdp_select onchange="changeSelectMdp(); validateForm()">
-                  <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe (le même pour tous les participants)</option>
+                  <option value="fixe" {% if form.mdp_select=="fixe" %}selected="selected" {% endif %}>Fixe</option>
                   <option value="prenom" {% if form.mdp_select=="prenom" %}selected="selected" {% endif %}>Prénom</option>
                   <option value="aleatoire" {% if form.mdp_select=="aleatoire" %}selected="selected" {% endif %}>
                     <i class="fas fa-random"></i>
@@ -64,7 +64,7 @@
               <div class="icon is-small is-left">
                 <i class="fas fa-lock"></i>
               </div>
-              <p class="help is-invisible">Just to prevent height moving</p>
+              <p id="mdp-select-id" class="help">Le même pour tous les participants</p>
             </div>
           </div>
           <div class="column">
@@ -146,18 +146,21 @@
           </p>
         </div>
       </div>
-      {% if wims_list %}
-      <button id="preview-button" class="button is-primary has-icons-left" type="submit" value="Prévisualisation">
+
+      <button
+        id="preview-button"
+        class="button is-primary has-icons-left{% if not wims_json %} is_hidden{% endif %}"
+        type="submit" value="Prévisualisation"
+      >
         <span class="icon is-small">
           <i class="fas fa-sync"></i>
         </span>
         <span>Prévisualiser</span>
       </button>
-      {% endif %}
       <input class="wims-json" type=hidden name=wims_json value='{{wims_json}}'>
     </form>
   </div><!-- column -->
-  <div class="column is-1">
+  <div class="column is-1 is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only">
   </div>
 
   <div class="column">

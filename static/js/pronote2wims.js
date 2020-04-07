@@ -131,7 +131,6 @@ function tableToJson(table) {
       rowData[ headers[j] ] = tableRow.cells[j].childNodes[0].nodeValue.replace(/\n/g, '').trim();
     } data.push(rowData);
   }
-  console.log(data)
   return data;
 }
 

@@ -154,7 +154,7 @@
         <span>Prévisualiser</span>
       </button>
       {% endif %}
-      <input type=hidden name=wims_json value='{{wims_json}}'>
+      <input class="wims-json" type=hidden name=wims_json value='{{wims_json}}'>
     </form>
   </div>
 
@@ -167,7 +167,7 @@
       <div class="column">
         <div class="is-pulled-right">
           <form method=post enctype=multipart/form-data action="/telecharger/">
-            <input type=hidden name=wims_json value='{{wims_json}}'>
+            <input class="wims-json" type=hidden name=wims_json value='{{wims_json}}'>
             <button class="button is-primary has-icon-left" type=submit>
               <span class="icon is-small">
                 <i class="fas fa-download"></i>

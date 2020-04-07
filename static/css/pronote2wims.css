@@ -30,3 +30,7 @@
 h1 {
   margin-bottom: -0.9rem!important;
 }
+/* Prevent grammalecte div messing up our table */
+tr > div{
+  display: none!important;
+}

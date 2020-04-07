@@ -119,3 +119,38 @@ function toggleTabs(tabName){
     contentHelp.classList.remove('is-hidden')
   }
 }
+
+function tableToJson(table) {
+  var data = []; // first row needs to be headers
+  var headers = ['login', 'firstname', 'lastname', 'password'];
+  // go through cells
+  for (var i=1; i<table.rows.length; i++) {
+    var tableRow = table.rows[i];
+    var rowData = {};
+    for (var j=0; j<tableRow.cells.length; j++) {
+      rowData[ headers[j] ] = tableRow.cells[j].childNodes[0].nodeValue.replace(/\n/g, '').trim();
+    } data.push(rowData);
+  }
+  console.log(data)
+  return data;
+}
+
+// Gère les modifications du tableau
+
+document.querySelectorAll('.editable').forEach((cell, i) => {
+  cell.addEventListener('keydown', function(event){
+    // perd le focus si l'utilisateur appuie sur la touche entrée
+    var key = event.keyCode || event.charCode;  // ie||others
+    if(key == 13)  // if enter key is pressed
+    event.target.blur();  // lose focus
+  });
+  cell.addEventListener('blur', function(event){
+    // met à jour le json
+    var json = tableToJson(document.getElementById('wims-table'))
+    document.querySelectorAll('.wims-json').forEach((element) => {
+      element.value = JSON.stringify(json)
+    });
+
+  });
+
+});

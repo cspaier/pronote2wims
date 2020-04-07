@@ -1,37 +1,40 @@
-<table class="table is-hoverable is-striped" >
+<table id="wims-table" class="table is-hoverable is-striped" >
   <tr>
     <th>Identifiant</th>
-    <th>Lastname</th>
-    <th>Firstname</th>
-    <th>Password</th>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Mot de passe</th>
   </tr>
   {% for eleve in wims_list %}
   <tr>
     {% if eleve.erreur['login'] %}
-    <td class="has-text-danger has-text-weight-bold tooltip tooltip-left ">
+    <td contenteditable="true" class="has-text-danger has-text-weight-bold tooltip tooltip-left editable">
+      {{eleve.login}}
       <span class="tooltiptext notification is-warning has-text-center">
         {{ eleve.erreur['login'] }}
       </span>
-      {% else %}
-      <td>
-      {% endif %}
-
+    </td>
+    {% else %}
+    <td contenteditable="true" class="editable">
       {{eleve.login}}
     </td>
+    {% endif %}
 
-      <td>{{eleve.lastname}}</td>
-      <td>{{eleve.firstname}}</td>
-      {% if eleve.erreur['password'] %}
-      <td class="has-text-danger has-text-weight-bold tooltip tooltip-right">
-        <span class="tooltiptext notification is-warning">
-          {{ eleve.erreur['password'] }}
-        </span>
-      {% else %}
-        <td>
-      {% endif %}
+    <td contenteditable="true" class="editable">{{eleve.firstname}}</td>
+    <td contenteditable="true" class="editable">{{eleve.lastname}}</td>
+
+    {% if eleve.erreur['password'] %}
+    <td contenteditable="true" class="has-text-danger has-text-weight-bold tooltip tooltip-right editable">
       {{eleve.password}}
-      </td>
-    </tr>
-    {% endfor %}
-    <td></td>
-  </table>
+      <span class="tooltiptext notification is-warning">
+        {{ eleve.erreur['password'] }}
+      </span>
+    </td>
+    {% else %}
+    <td contenteditable="true" class="editable">
+      {{eleve.password}}
+    </td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>

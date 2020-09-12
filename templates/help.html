@@ -38,15 +38,42 @@
             <span class="icon is-small">
               <img height="1em;" src='{{ url_for('static', filename='media/export-pronote-icon.png') }}'>
             </span> et enregistrez le fichier csv.</p>
+
             <h4 id="importer-p2w" class="title is-5">
               <a class="bd-anchor-link" href="#importer-p2w">#</a>
               Importer dans pronote2wims
             </h4>
-
+            <p>
+              Dans <span class="has-text-primary"><b>données pronote</b></span> cliquer sur
+              <button class="button is-small is-static is-light">
+                <span class="icon is-small"><i class="fas fa-upload"></i></span>
+                <span>Fichier CSV</span>
+              </button>
+              puis séléctionner le fichier CSV téléchargé précedement.
+              Envoyer le fichier en cliquant sur le bouton <button  class="button is-primary is-small"> Upload </button>
+            </p>
             <h4 id="configurer" class="title is-5">
               <a class="bd-anchor-link" href="#configurer">#</a>
               Configurer
             </h4>
+            <p>
+              Vous pouvez choisir le format de l'identifiant et du mot de passe qui sera généré pour une utilisation dans wims.
+            </p>
+            <h5  class="title is-6">Mot de passe</h5>
+            <ul>
+              <li><b>Prénom:</b> Le mot de passe sera le prénom de l'utilisateur. Il commence par une majuscule et ne contient pas d'accents.</li>
+              <li><b>Fixe:</b> Le mot de passe sera le même pour tous les utilisateurs. Vous pouvez choisir le mot de passe dans le champ <span class="has-text-primary"><b>Même pour tous</b></span>.</li>
+              <li><b>Aléatoire:</b> Un mot de passe alphanumérique aléatoire sera généré pour chaque utilisateur. Vous pouvez choisir ta taille du mot de passe.
+            </ul>
+            <h5  class="title is-6">Identifiant</h5>
+            <p>Vous pouvez choisir le format de l'identifiant.</p>
+
+            <h4 id="previsualiser" class="title is-5">
+              <a class="bd-anchor-link" href="#previsualiser">#</a>
+              Prévisualiser
+            </h4>
+            <p>Après avoir modifié la configuration, cliquez sur <button  class="button is-primary is-small"> Prévisualiser</button> pour voir les données dans le tableau de droite.</p>
+            <p></p>
             <h4 id="corriger" class="title is-5">
               <a class="bd-anchor-link" href="#corriger">#</a>
               Corriger les érreurs

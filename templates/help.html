@@ -1,23 +1,14 @@
 
 <div class="columns">
   <div class="column is-narrow">
-    <h2 class="title is-4">Aide</h2>
-    <aside class="menu">
-      <ul class="menu-list">
-          <p class="menu-label">
-    General
-  </p>
-        <li><a href="#a-propos">A propos</a></li>
-        <li>
-          <a href="#utilisation">Utilisation</a>
-            <li><a href="#export-pronote">Export pronote</a></li>
-        </ul>
-      </aside>
+    <h2 class="title is-3">Aide</h2>
+    {% include 'help-menu.html'%}
+
     </div>
     <div class="column">
       <div class="content">
 
-        <h3 id="a-propos" class="title is-5">
+        <h3 id="a-propos" class="title is-4">
           <a class="bd-anchor-link" href="#a-propos">#</a>
           A propos
         </h3>
@@ -29,12 +20,17 @@
           Aucune donnée n'est stoquée ou transmise et le code est disponible sur <a href="https://github.com/cspaier/pronote2wims">ce dépot github</a>
           sous licence <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL-3</a>.
         </p>
-          <h3>Un problème? Une question? </h3>
+        <h3 id="probleme-question" class="title is-4">
+          <a class="bd-anchor-link" href="#probleme-question">#</a>
+              Un problème? Une question?
+        </h3>
           N'hésitez pas à créer une issue dans le <a href="https://github.com/cspaier/pronote2wims">dépot github</a> de ce projet.
-        <h3 id="utilisation" class="title is-5">
+
+        <h3 id="utilisation" class="title is-4">
           <a class="bd-anchor-link" href="#utilisation">#</a>
           Utilisation</h3>
-          <h4 id="export-pronote" class="title is-6">
+
+          <h4 id="export-pronote" class="title is-5">
             <a class="bd-anchor-link" href="#export-pronote">#</a>
             Exporter les classes à partir de pronote
           </h4>
@@ -42,17 +38,17 @@
             <span class="icon is-small">
               <img height="1em;" src='{{ url_for('static', filename='media/export-pronote-icon.png') }}'>
             </span> et enregistrez le fichier csv.</p>
-            <h4 id="importer-p2w" class="title is-6">
-              <a class="bd-anchor-link" href="#export-pronote">#</a>
+            <h4 id="importer-p2w" class="title is-5">
+              <a class="bd-anchor-link" href="#importer-p2w">#</a>
               Importer dans pronote2wims
             </h4>
 
-            <h4 id="importer-p2w" class="title is-6">
-              <a class="bd-anchor-link" href="#export-pronote">#</a>
+            <h4 id="configurer" class="title is-5">
+              <a class="bd-anchor-link" href="#configurer">#</a>
               Configurer
             </h4>
-            <h4 id="importer-p2w" class="title is-6">
-              <a class="bd-anchor-link" href="#export-pronote">#</a>
+            <h4 id="corriger" class="title is-5">
+              <a class="bd-anchor-link" href="#corriger">#</a>
               Corriger les érreurs
             </h4>
           </div>

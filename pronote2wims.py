@@ -100,13 +100,19 @@ def csv2list(csv_list, form):
     # On ne prend pas la première ligne qui est le header variable
     for ligne in csv_list:
         # Les noms de familles sont en MAJUSCULES
-        nom = ' '.join(re.findall(r"\b[A-Z][A-Z]+\b", ligne[0]))
+        noms = re.findall(r"\b[A-Z][A-Z]+\b", ligne[0])
+        nom = ' '.join(noms)
         #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
         # Ca fonctionne tant que pronote ne rajoute pas des champs non élèves contenant des mots en majuscules
         if nom == '':
             continue
-        # On enlève le nom de la ligne et l'espace du début
-        prenom = ligne[0].replace(nom, '')[1:]
+        # On enlève les noms pour récupérer les prénoms
+        # Note: r"\b[A-Z][a-z]+\b" trouve les mots commencant par une majuscule mais a un soucis avec les accents
+        prenom = ligne[0]
+        for n in noms:
+            prenom = prenom.replace(n, '')
+        # Le prénom commence par une majuscule
+        prenom = ' '.join(re.findall(r"[A-Z].+", prenom))
         wims_list.append(ligne_factory({'lastname': nom, 'firstname': prenom}, form))
     return wims_list
 

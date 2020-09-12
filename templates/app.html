@@ -170,7 +170,7 @@
       </div>
       {% if wims_list %}
       <div class="column">
-        <div class="is-pulled-right">
+        <div id="telecharger-csv" class="is-pulled-right">
           <form method=post enctype=multipart/form-data action="/telecharger/">
             <input class="wims-json" type=hidden name=wims_json value='{{wims_json}}'>
             <button class="button is-primary has-icon-left" type=submit>
@@ -183,6 +183,10 @@
         </div>
       </div>
     </div>
+    <div id="table-message">
+    </div>
+      <hr class="hr">
+
     {% include 'table.html'%}
 
     {% else %}

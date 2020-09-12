@@ -139,6 +139,7 @@ function testLength(input) {
 
 function tableToJson(table) {
   // Convertit le tableau html en json et teste les erreurs sur les champs login et password
+  var errors = 0
   var data = []; // first row needs to be headers
   var headers = ['login', 'lastname', 'firstname', 'password'];
   // go through rows
@@ -160,6 +161,7 @@ function tableToJson(table) {
           cell.classList.remove('has-text-danger', 'has-text-weight-bold', 'tooltip', 'tooltip-right', 'tooltip-left')
         }
         else { // erreur
+          errors += 1
           cell.classList.add('has-text-danger', 'has-text-weight-bold', 'tooltip')
           if (j == 0){
             cell.classList.add('tooltip-left')
@@ -175,6 +177,19 @@ function tableToJson(table) {
       }
       rowData[ headers[j] ] = value;
     } data.push(rowData);
+  }
+
+  // Met à jour l'avertissement en fonction des erreurs
+  var messageEl = document.getElementById('table-message')
+
+  if (errors > 0){
+    messageEl.innerHTML = errors.toString() + " erreurs ont étés rencontrées. Elles sont indiquée en rouge dans le tableau ci-dessous et vous pouvez les corriger directement."
+    document.getElementById('telecharger-csv').classList.add('is-hidden')
+  }
+  else {
+    messageEl.innerHTML = " Aucune erreur rencontrée. Vous pouvez télécharger le fichier CSV."
+    document.getElementById('telecharger-csv').classList.remove('is-hidden')
+
   }
   return data;
 }
@@ -198,3 +213,6 @@ document.querySelectorAll('.editable').forEach((cell, i) => {
   });
 
 });
+
+
+tableToJson(document.getElementById('wims-table'))

@@ -183,10 +183,15 @@ function tableToJson(table) {
   var messageEl = document.getElementById('table-message')
 
   if (errors > 0){
+    messageEl.parentNode.classList.remove('is-success')
+    messageEl.parentNode.classList.add('is-danger')
+
     messageEl.innerHTML = errors.toString() + " erreurs ont étés rencontrées. Elles sont indiquée en rouge dans le tableau ci-dessous et vous pouvez les corriger directement."
     document.getElementById('telecharger-csv').classList.add('is-hidden')
   }
   else {
+    messageEl.parentNode.classList.add('is-success')
+    messageEl.parentNode.classList.remove('is-danger')
     messageEl.innerHTML = " Aucune erreur rencontrée. Vous pouvez télécharger le fichier CSV."
     document.getElementById('telecharger-csv').classList.remove('is-hidden')
 

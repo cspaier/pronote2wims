@@ -122,15 +122,58 @@ function toggleTabs(tabName){
   }
 }
 
+function testLength(input) {
+  // Vérifie que la longueur d'une chaine de caractère est comprise entre 4 et 16.
+  // Retourne une chaine de caractère:
+  // - 'trop court: moins de 4'
+  // - 'trop long: plus de 16'
+  // - chaine vide si aucun problème
+  if (input.length < 4){
+    return 'trop court: moins de 4'
+  }
+  if (input.length > 16){
+    return 'trop long: plus de 16'
+  }
+  return ''
+}
+
 function tableToJson(table) {
+  // Convertit le tableau html en json et teste les erreurs sur les champs login et password
   var data = []; // first row needs to be headers
   var headers = ['login', 'lastname', 'firstname', 'password'];
-  // go through cells
+  // go through rows
   for (var i=1; i<table.rows.length; i++) {
     var tableRow = table.rows[i];
     var rowData = {};
+    // go through row cells
     for (var j=0; j<tableRow.cells.length; j++) {
-      rowData[ headers[j] ] = tableRow.cells[j].childNodes[0].nodeValue.replace(/\n/g, '').trim();
+      var cell = tableRow.cells[j]
+      var value = cell.childNodes[0].nodeValue.replace(/\n/g, '').trim()
+      // Si on a un champ de type login ou password, on gère les erreurs
+      if (j == 0 || j == 3){
+        var error = testLength(value)
+        // on retire les possibles messages d'erreurs
+        while (cell.childNodes.length > 1) {
+          cell.removeChild(cell.lastChild);
+        }
+        if (error === ""){// pas d'erreur
+          cell.classList.remove('has-text-danger', 'has-text-weight-bold', 'tooltip', 'tooltip-right', 'tooltip-left')
+        }
+        else { // erreur
+          cell.classList.add('has-text-danger', 'has-text-weight-bold', 'tooltip')
+          if (j == 0){
+            cell.classList.add('tooltip-left')
+          }
+          else{
+            cell.classList.add('tooltip-right')
+          }
+          var tooltip = document.createElement("span");
+          tooltip.classList.add("tooltiptext", "notification", "is-warning")
+          tooltip.innerHTML =  error
+          cell.appendChild(tooltip)
+        }
+      }
+      rowData[ headers[j] ] = value;
     } data.push(rowData);
   }
   return data;

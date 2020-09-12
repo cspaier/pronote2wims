@@ -9,15 +9,11 @@
   <tr>
     {% if eleve.erreur['login'] %}
     <td contenteditable="true" class="has-text-danger has-text-weight-bold tooltip tooltip-left editable">
-      {{eleve.login}}
-      <span class="tooltiptext notification is-warning has-text-center">
+      {{eleve.login}}<span class="tooltiptext notification is-warning has-text-center">
         {{ eleve.erreur['login'] }}
-      </span>
-    </td>
+      </span></td>
     {% else %}
-    <td contenteditable="true" class="editable">
-      {{eleve.login}}
-    </td>
+    <td contenteditable="true" class="editable">{{eleve.login}}</td>
     {% endif %}
 
     <td contenteditable="true" class="editable">{{eleve.lastname}}</td>
@@ -25,15 +21,11 @@
 
     {% if eleve.erreur['password'] %}
     <td contenteditable="true" class="has-text-danger has-text-weight-bold tooltip tooltip-right editable">
-      {{eleve.password}}
-      <span class="tooltiptext notification is-warning">
+      {{eleve.password}}<span class="tooltiptext notification is-warning">
         {{ eleve.erreur['password'] }}
-      </span>
-    </td>
+      </span></td>
     {% else %}
-    <td contenteditable="true" class="editable">
-      {{eleve.password}}
-    </td>
+    <td contenteditable="true" class="editable">{{eleve.password}}</td>
     {% endif %}
   </tr>
   {% endfor %}

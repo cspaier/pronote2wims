@@ -22,7 +22,7 @@ def nettoyer(chaine):
     - supprime les caractères non alphanumériques
     """
     sortie = unidecode.unidecode(chaine)
-    sortie = ''.join(e for e in sortie if e.isalnum())
+    sortie = ''.join(e for e in sortie if e.isalnum()).lower()
     return sortie
 
 def id_factory(nom, prenom, form):
@@ -33,11 +33,11 @@ def id_factory(nom, prenom, form):
     prenom = nettoyer(prenom)
     nom = nettoyer(nom)
     if style_id == 'nomp':
-        id = nom.replace(' ', '').lower() + prenom[0].lower()
+        id = nom.replace(' ', '') + prenom[0]
     elif style_id == 'prenomnom':
-        id = prenom.replace(' ', '').lower() + nom.replace(' ', '').lower()
+        id = prenom.replace(' ', '') + nom.replace(' ', '')
     elif style_id == 'pnom':
-        id = prenom[0].lower() + nom.replace(' ', '').lower()
+        id = prenom[0] + nom.replace(' ', '')
     else:
         # Sinon, le format est "custom"
         id = form['format_id_custom']\

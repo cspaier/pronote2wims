@@ -129,7 +129,7 @@ def telecharger():
     # On écrit les lignes dans le csv
     for ligne in wims_list:
         writer.writerow({key: ligne[key] for key in fieldnames})
-    output = make_response(si.getvalue())
+    output = make_response(si.getvalue().encode("cp1252"))
     output.headers["Content-Disposition"] = "attachment; filename=wims.csv"
     output.headers["Content-type"] = "text/csv"
     return output

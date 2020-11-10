@@ -41,9 +41,9 @@ def id_factory(nom, prenom, form):
     else:
         # Sinon, le format est "custom"
         id = form['format_id_custom']\
-            .replace('$nom', nom.replace(' ', '').lower())\
-            .replace('$prenom', prenom.replace(' ', '').lower())\
-            .replace('$p', prenom[0].lower())
+            .replace('$nom', nom.replace(' ', ''))\
+            .replace('$prenom', prenom.replace(' ', ''))\
+            .replace('$p', prenom[0])
     #tests sur la longueur de l'id
     if len(id) < 4:
         erreur = 'trop court: moins de 4'

@@ -99,6 +99,9 @@ def csv2list(csv_list, form):
     wims_list = []
     # On ne prend pas la première ligne qui est le header variable
     for ligne in csv_list:
+        # On ne traite pas les lignes vides.
+        if not ligne:
+            continue
         # Les noms de familles sont en MAJUSCULES
         noms = re.findall(r"\b[A-Z][A-Z]+\b", ligne[0])
         nom = ' '.join(noms)
@@ -172,8 +175,10 @@ def home():
             file = request.files['file']
             if not(file and allowed_file(file.filename)):
                 return redirect(request.url)
-            csv_texte = file.read().decode('utf-8-sig').splitlines()
-            reader = csv.reader(csv_texte, delimiter=";")
+            csv_texte = file.read().decode('utf-8-sig')
+            # On vérifie le délimiteur. Ca fonctionne tant qu'il n'y a pas de ; dans les champs
+            delimiter = ";" if ";" in csv_texte else "\t"
+            reader = csv.reader(csv_texte.splitlines(), delimiter=delimiter)
             wims_list = csv2list(reader, request.form)
 
         else:

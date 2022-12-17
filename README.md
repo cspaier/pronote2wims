@@ -2,7 +2,9 @@
 
 Conversion de données pronote vers csv pour usage dans wims.
 
-Hébergé sur https://pronote2wims.herokuapp.com/
+Hébergé sur https://pronote2wims.byache.fr/
+
+Hébergement de rechange : https://pronote2wims.alwaysdata.net/
 
 ## Déploiement local
 

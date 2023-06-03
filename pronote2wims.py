@@ -1,6 +1,6 @@
 import csv
 import json
-import re
+import regex
 import unidecode
 from io import StringIO
 from flask import Flask, redirect, request, render_template, make_response
@@ -97,13 +97,15 @@ def csv2list(csv_list, form):
         csv_list est une liste de champs. On chope le premier
     """
     wims_list = []
+    #On crée un dictionnaire pour compter le nombre d'occurences des identifiants et gérer les doublons
+    counter = {}
     # On ne prend pas la première ligne qui est le header variable
     for ligne in csv_list:
         # On ne traite pas les lignes vides.
         if not ligne:
             continue
         # Les noms de familles sont en MAJUSCULES
-        noms = re.findall(r"\b[A-Z][A-Z]+\b", ligne[0])
+        noms = regex.findall(r"\b[\p{Lu}][\p{Lu}]+\b", ligne[0])
         nom = ' '.join(noms)
         #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
         # Ca fonctionne tant que pronote ne rajoute pas des champs non élèves contenant des mots en majuscules
@@ -115,8 +117,20 @@ def csv2list(csv_list, form):
         for n in noms:
             prenom = prenom.replace(n, '')
         # Le prénom commence par une majuscule
-        prenom = ' '.join(re.findall(r"[A-Z].+", prenom))
-        wims_list.append(ligne_factory({'lastname': nom, 'firstname': prenom}, form))
+        prenom = ' '.join(regex.findall(r"[\p{Lu}].+", prenom))
+        #On crée le mot de passe et le login à partir du nom et du prénom, mais on doit vérifier si le login n'est pas en doublon avant de l'ajouter à notre liste
+        ligne=ligne_factory({'lastname': nom, 'firstname': prenom}, form)
+        login=ligne['login']
+        #Si le login n'est pas déjà dans la liste on met à jour notre dictionnaire
+        if login not in counter :
+            counter[login]=0
+        else : 
+        #si il y a doublon, on rajoute un numéro à la fin du login
+            ligne['login']+=str(counter[login])
+        #Dans tous les cas on incrémente le nombre d'occurrences du login initial
+        counter[login]+=1
+        #On rajoute notre ligne à la liste
+        wims_list.append(ligne)
     return wims_list
 
 @app.route('/telecharger/', methods=['POST'])

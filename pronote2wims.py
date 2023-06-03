@@ -1,6 +1,6 @@
 import csv
 import json
-import re
+import regex
 import unidecode
 from io import StringIO
 from flask import Flask, redirect, request, render_template, make_response
@@ -103,7 +103,7 @@ def csv2list(csv_list, form):
         if not ligne:
             continue
         # Les noms de familles sont en MAJUSCULES
-        noms = re.findall(r"\b[A-Z][A-Z]+\b", ligne[0])
+        noms = regex.findall(r"\b[\p{Lu}][\p{Lu}]+\b", ligne[0])
         nom = ' '.join(noms)
         #les entetes ou pieds de listes dont des lignes où le nom est vide : il faut les enlever
         # Ca fonctionne tant que pronote ne rajoute pas des champs non élèves contenant des mots en majuscules
@@ -115,7 +115,7 @@ def csv2list(csv_list, form):
         for n in noms:
             prenom = prenom.replace(n, '')
         # Le prénom commence par une majuscule
-        prenom = ' '.join(re.findall(r"[A-Z].+", prenom))
+        prenom = ' '.join(regex.findall(r"[\p{Lu}].+", prenom))
         wims_list.append(ligne_factory({'lastname': nom, 'firstname': prenom}, form))
     return wims_list
 

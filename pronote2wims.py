@@ -97,6 +97,8 @@ def csv2list(csv_list, form):
         csv_list est une liste de champs. On chope le premier
     """
     wims_list = []
+    #On crée un dictionnaire pour compter le nombre d'occurences des identifiants et gérer les doublons
+    counter = {}
     # On ne prend pas la première ligne qui est le header variable
     for ligne in csv_list:
         # On ne traite pas les lignes vides.
@@ -116,7 +118,19 @@ def csv2list(csv_list, form):
             prenom = prenom.replace(n, '')
         # Le prénom commence par une majuscule
         prenom = ' '.join(regex.findall(r"[\p{Lu}].+", prenom))
-        wims_list.append(ligne_factory({'lastname': nom, 'firstname': prenom}, form))
+        #On crée le mot de passe et le login à partir du nom et du prénom, mais on doit vérifier si le login n'est pas en doublon avant de l'ajouter à notre liste
+        ligne=ligne_factory({'lastname': nom, 'firstname': prenom}, form)
+        login=ligne['login']
+        #Si le login n'est pas déjà dans la liste on met à jour notre dictionnaire
+        if login not in counter :
+            counter[login]=0
+        else : 
+        #si il y a doublon, on rajoute un numéro à la fin du login
+            ligne['login']+=str(counter[login])
+        #Dans tous les cas on incrémente le nombre d'occurrences du login initial
+        counter[login]+=1
+        #On rajoute notre ligne à la liste
+        wims_list.append(ligne)
     return wims_list
 
 @app.route('/telecharger/', methods=['POST'])
